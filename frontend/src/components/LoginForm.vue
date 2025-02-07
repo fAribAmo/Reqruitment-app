@@ -70,9 +70,6 @@ export default {
   margin: 0 auto;
   background-color: #fff;
   padding: 2rem;
-  width: 100%;
-  max-width: 400px;
-  margin: 1rem auto;
   border-radius: 6px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
