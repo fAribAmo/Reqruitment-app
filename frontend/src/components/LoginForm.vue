@@ -26,10 +26,13 @@
 
     <div class="additional-options">
       <label class="remember-me">
-        <input type="checkbox" v-model="rememberMe" />
+        <input
+          type="checkbox"
+          v-model="rememberMe"
+        />
         Remember Me
       </label>
-      <a href="#" class="forgot-link">Forgot Password?</a>
+      <a href="#" class="register-link">Create account?</a>
     </div>
 
     <button type="submit" class="btn-primary">Login</button>
@@ -53,6 +56,7 @@ export default {
         password: this.password,
         rememberMe: this.rememberMe
       };
+
       this.$emit("login-submitted", credentials);
     }
   }
@@ -66,6 +70,9 @@ export default {
   margin: 0 auto;
   background-color: #fff;
   padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  margin: 1rem auto;
   border-radius: 6px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
@@ -107,12 +114,13 @@ input[type="password"] {
   align-items: center;
 }
 
-.forgot-link {
+.register-link {
   color: #007bff;
   text-decoration: none;
   font-size: 0.9rem;
 }
-.forgot-link:hover {
+
+.register-link:hover {
   text-decoration: underline;
 }
 
@@ -126,6 +134,7 @@ input[type="password"] {
   font-weight: 600;
   cursor: pointer;
 }
+
 .btn-primary:hover {
   background-color: #0056b3;
 }

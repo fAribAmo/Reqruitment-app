@@ -5,7 +5,6 @@
       <p>Create an account to get started.</p>
     </div>
 
-    <!-- Include the register form -->
     <RegisterForm @user-registered="handleUserRegistered" />
   </div>
 </template>
@@ -21,9 +20,8 @@ export default {
   methods: {
     handleUserRegistered(formData) {
       console.log("Received registration data:", formData);
-      // 1. Post the data to an API
-      // 2. Show success/error messages
-      // 3. Possibly redirect or show a welcome page
+      //  Post the data to an API
+      //  redirect to a welcome page
     }
   }
 };
@@ -35,7 +33,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center; 
-  min-height: 100vh; /* fill the full viewport height */
+  min-height: 100vh; 
   background: #f1f1f1;
   padding: 1rem;
 }
