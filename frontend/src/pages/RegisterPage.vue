@@ -23,6 +23,7 @@ export default {
       console.log("Received registration data:", formData);
       //  Post the data to an API
       //  redirect to a welcome page
+      this.$router.push("/apply");
     }
   }
 };
