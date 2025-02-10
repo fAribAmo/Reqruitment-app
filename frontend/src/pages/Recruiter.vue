@@ -47,6 +47,11 @@ export default {
   },
   methods: {
     fetchApplications() {
+      this.applications = [
+        { id: 1, fullName: 'Alice Johnson', email: 'alice@example.com' },
+        { id: 2, fullName: 'Bob Smith',    email: 'bob@example.com' }
+        // ...
+      ]
       // Example fetch logic or mock data
     },
     handleApplicantSelected(applicant) {
