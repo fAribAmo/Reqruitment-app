@@ -32,7 +32,7 @@
         />
         Remember Me
       </label>
-      <a href="#" class="register-link">Create account?</a>
+      <a href="../Register" class="register-link">Create account?</a>
     </div>
 
     <button type="submit" class="btn-primary">Login</button>
