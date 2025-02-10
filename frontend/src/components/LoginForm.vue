@@ -3,12 +3,12 @@
     <h2 class="form-title">Sign In</h2>
 
     <div class="form-group">
-      <label for="email">Email</label>
+      <label for="username">Username</label>
       <input
-        id="email"
-        v-model="email"
-        type="email"
-        placeholder="Enter your email"
+        id="username"
+        v-model="username"
+        type="username"
+        placeholder="Enter your username"
         required
       />
     </div>
@@ -44,7 +44,7 @@ export default {
   name: "LoginForm",
   data() {
     return {
-      email: "",
+      username: "",
       password: "",
       rememberMe: false
     };
@@ -52,7 +52,7 @@ export default {
   methods: {
     onSubmit() {
       const credentials = {
-        email: this.email,
+        username: this.username,
         password: this.password,
         rememberMe: this.rememberMe
       };
@@ -90,7 +90,7 @@ label {
   font-weight: 600;
 }
 
-input[type="email"],
+input[type="username"],
 input[type="password"] {
   width: 100%;
   padding: 0.6rem;
