@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import RegisterForm from "../components/LoginForm.vue";
+import RegisterForm from "../components/RegisterForm.vue";
 
 export default {
   name: "RegisterPage",

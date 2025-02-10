@@ -46,18 +46,27 @@
       />
     </div>
 
-    <!-- Password fields -->
-    <!-- 
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        id="username"
+        v-model="username"
+        type="username"
+        placeholder="Enter your username"
+        required
+      />
+    </div>
+
     <div class="form-group">
       <label for="password">Password</label>
       <input
         id="password"
         v-model="password"
         type="password"
+        placeholder="Enter your password"
         required
       />
     </div>
-    -->
 
     <button type="submit" class="btn-primary">Register</button>
   </form>
@@ -72,7 +81,8 @@ export default {
       lastName: "",
       personalId: "",
       email: "",
-      // password: "",
+      username: "",
+      password: "",
     };
   },
   methods: {
