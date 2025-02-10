@@ -5,7 +5,6 @@
       <p>Please sign in to continue.</p>
     </div>
     <LoginForm @login-submitted="handleLogin" />
-    <router-link to="/register">Create an account</router-link>
 
   </div>
 </template>

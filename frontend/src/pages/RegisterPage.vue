@@ -6,7 +6,6 @@
     </div>
 
     <RegisterForm @user-registered="handleUserRegistered" />
-    <router-link to="/">Already have an account? Log in here</router-link>
 
   </div>
 </template>
