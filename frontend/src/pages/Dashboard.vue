@@ -1,16 +1,18 @@
 <template>
-    <div>
-      <h1>Dashboard</h1>
-      <p>Welcome to your dashboard!</p>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    name: "Dashboard",
-  };
-  </script>
-  
-  <style scoped>
-  </style>
-  
+  <div>
+    <h1>Welcome to the Dashboard</h1>
+    <p>You are successfully logged in.</p>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Dashboar",
+};
+</script>
+
+<style scoped>
+h1 {
+  color: #333;
+}
+</style>
