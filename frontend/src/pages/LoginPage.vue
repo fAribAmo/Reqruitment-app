@@ -4,14 +4,14 @@
     <form @submit.prevent="handleLogin">
       <label>Username:</label>
       <input v-model="username" type="text" required />
-      
+
       <label v-if="!missingPassword">Password:</label>
       <input v-if="!missingPassword" v-model="password" type="password" required />
-      
-      <p v-if="missingPassword" class="error">Some fields are missing. Please create a password.</p>
+
+      <p v-if="missingPassword" class="error">No password found. Please create one.</p>
       <label v-if="missingPassword">New Password:</label>
       <input v-if="missingPassword" v-model="newPassword" type="password" required />
-      
+
       <button type="submit" v-if="!missingPassword">Login</button>
       <button v-if="missingPassword" @click.prevent="setPassword">Set Password</button>
     </form>
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import api from '../api';
 
 export default {
   data() {
@@ -32,14 +32,28 @@ export default {
       errorMessage: ''
     };
   },
-  methods: {
+ methods: {
     async handleLogin() {
       try {
-        const response = await axios.post('/api/login', { username: this.username, password: this.password });
+        //Change '/login' to '/auth/login'
+        const response = await api.post('/auth/login', { username: this.username, password: this.password });
+
+        this.errorMessage = "🎉 Login successful!...";
+
         localStorage.setItem('token', response.data.token);
-        this.$router.push('/dashboard');
+        console.log("Login successful:", response);
+        
+         //Ensure Vue Router is properly accessed
+        if (this.$router) {
+          this.$router.push('/dashboard');
+        } else {
+          console.error("Router is undefined!");
+        }
+
       } catch (error) {
-        if (error.response && error.response.data.message.includes('Some fields are missing')) {
+        console.error("Login Error:", error.response ? error.response.data : error);
+        
+        if (error.response && error.response.data.message.includes('No password set')) {
           this.missingPassword = true;
           this.errorMessage = error.response.data.message;
         } else {
@@ -49,14 +63,18 @@ export default {
     },
     async setPassword() {
       try {
-        const response = await axios.post('/api/set-password', { username: this.username, newPassword: this.newPassword });
+        //Change '/set-password' to '/auth/set-password'
+        const response = await api.post('/auth/set-password', { username: this.username, newPassword: this.newPassword });
+
         localStorage.setItem('token', response.data.token);
         this.$router.push('/dashboard');
       } catch (error) {
+        console.error("Set Password Error:", error.response ? error.response.data : error);
         this.errorMessage = 'Error setting password';
       }
     }
-  }
+}
+ 
 };
 </script>
 

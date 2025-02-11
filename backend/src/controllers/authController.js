@@ -20,14 +20,25 @@ async function login(req, res) {
     const { username, password } = req.body;
     try {
         const user = await findUserByUsername(username);
-        if (!user) return res.status(404).json({ message: 'User not found' });
+     
+        if (!user) {
+            console.log("User not found:", username);
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        console.log("User found:", user.username);
+        console.log("Stored password in DB:", user.password);
+        console.log("Entered password:", password);
 
         if (!user.password) return res.status(400).json({ message: 'Some fields are missing. Please create a password.' });
 
-        const isMatch = await comparePasswords(password, user.password);
-        if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+        if (password !== user.password) {
+            console.log("Passwords do not match!");
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
 
         const token = generateJWT(user);
+        console.log("Login successful!");
         res.json({ token, message: 'Login successful' });
     } catch (error) {
         res.status(500).json({ message: 'Server error' });

@@ -1,3 +1,4 @@
+/**Authenticates API requests by verifying JWT and allowing access only if the token is valid.  */
 const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('../config/auth');
 

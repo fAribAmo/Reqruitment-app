@@ -8,8 +8,9 @@ async function hashPassword(password) {
 }
 
 async function comparePasswords(inputPassword, storedPassword) {
-    return await bcrypt.compare(inputPassword, storedPassword);
+    return inputPassword === storedPassword; 
 }
+
 
 function generateJWT(user) {
     return jwt.sign({ id: user.person_id, role: user.role_id }, jwtSecret, { expiresIn: tokenExpiration });
