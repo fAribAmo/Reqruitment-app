@@ -3,10 +3,10 @@
     <h2 class="form-title">Create Account</h2>
 
     <div class="form-group">
-      <label for="firstName">Name</label>
+      <label for="name">Name</label>
       <input
-        id="firstName"
-        v-model="firstName"
+        id="name"
+        v-model="name"
         type="text"
         placeholder="Enter your name"
         required
@@ -14,10 +14,10 @@
     </div>
 
     <div class="form-group">
-      <label for="lastName">Surname</label>
+      <label for="surname">Surname</label>
       <input
-        id="lastName"
-        v-model="lastName"
+        id="surname"
+        v-model="surname"
         type="text"
         placeholder="Enter your surname"
         required
@@ -25,10 +25,10 @@
     </div>
 
     <div class="form-group">
-      <label for="personalId">Personal ID Number</label>
+      <label for="pnr">Personal ID Number</label>
       <input
-        id="personalId"
-        v-model="personalId"
+        id="pnr"
+        v-model="pnr"
         type="text"
         placeholder="e.g. 123456-7890"
         required
@@ -77,9 +77,9 @@ export default {
   name: "RegisterForm",
   data() {
     return {
-      firstName: "",
-      lastName: "",
-      personalId: "",
+      name: "",
+      surname: "",
+      pnr: "",
       email: "",
       username: "",
       password: "",
@@ -88,10 +88,12 @@ export default {
   methods: {
     submitRegistration() {
       const formData = {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        personalId: this.personalId,
+        name: this.name,
+        surname: this.surname,
+        pnr: this.pnr,
         email: this.email,
+        username: this.username,
+        password: this.password
       };
 
       this.$emit("user-registered", formData);
