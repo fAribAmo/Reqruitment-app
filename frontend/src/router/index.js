@@ -1,15 +1,24 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import LoginPage from '../pages/LoginPage.vue';
+
+import Apply from '../pages/Apply.vue';
 import Dashboard from '../pages/Dashboard.vue';
+import LoginPage from '../pages/LoginPage.vue';  
+import Recruiter from '../pages/Recruiter.vue';
+import RegisterPage from '../pages/RegisterPage.vue';  
 
 const routes = [
-    { path: '/', component: LoginPage },
-    { path: '/dashboard', component: Dashboard }
+  { path: '/', redirect: '/login' },
+  { path: '/apply', component: Apply },
+  { path: '/dashboard', component: Dashboard },
+  { path: '/login', component: LoginPage },  
+  { path: '/recruiter', component: Recruiter },
+  { path: '/register', component: RegisterPage },  
 ];
 
+
 const router = createRouter({
-    history: createWebHistory(),
-    routes
+  history: createWebHistory(), 
+  routes,
 });
 
-export default router; 
+export default router;
