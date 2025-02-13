@@ -36,6 +36,7 @@
     methods: {
       selectApplicant(applicant) {
         // Emit event to parent (RecruiterPage)
+        // Shall connect to api in future iteration
         this.$emit('applicant-selected', applicant)
       }
     }

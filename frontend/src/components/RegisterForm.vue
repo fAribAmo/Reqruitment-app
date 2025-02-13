@@ -73,6 +73,7 @@
 </template>
 
 <script>
+import api from '../api';  // Import the API instance
 export default {
   name: "RegisterForm",
   data() {
@@ -86,17 +87,29 @@ export default {
     };
   },
   methods: {
-    submitRegistration() {
-      const formData = {
-        name: this.name,
-        surname: this.surname,
-        pnr: this.pnr,
-        email: this.email,
-        username: this.username,
-        password: this.password
-      };
-
-      this.$emit("user-registered", formData);
+    async submitRegistration() {
+      try {
+        const response = await api.post('/register', {
+          name: this.name,
+          surname: this.surname,
+          pnr: this.pnr,
+          email: this.email,
+          username: this.username,
+          password: this.password
+        });
+        console.log("User registered:", response.data);
+        alert("Registration successful!");
+        // Clear form after success
+        this.name = "";
+        this.surname = "";
+        this.pnr = "";
+        this.email = "";
+        this.username = "";
+        this.password = "";
+      } catch (error) {
+        console.error("Registration failed:", error);
+        alert("Registration failed: " + (error.response?.data?.error || "Server error"));
+      }
     }
   }
 };

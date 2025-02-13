@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="onSubmit" class="login-form">
+  <form @submit.prevent="submitLogin" class="login-form">
     <h2 class="form-title">Sign In</h2>
 
     <div class="form-group">
@@ -26,10 +26,7 @@
 
     <div class="additional-options">
       <label class="remember-me">
-        <input
-          type="checkbox"
-          v-model="rememberMe"
-        />
+        <input type="checkbox" v-model="rememberMe" />
         Remember Me
       </label>
       <a href="../Register" class="register-link">Create account?</a>
@@ -40,26 +37,38 @@
 </template>
 
 <script>
+import api from '../api';  // Import the API instance
 export default {
   name: "LoginForm",
   data() {
     return {
       username: "",
       password: "",
-      rememberMe: false
+      rememberMe: false,
     };
   },
   methods: {
-    onSubmit() {
-      const credentials = {
-        username: this.username,
-        password: this.password,
-        rememberMe: this.rememberMe
-      };
-
-      this.$emit("login-submitted", credentials);
-    }
-  }
+    async submitLogin() {
+      try {
+        const response = await api.post("/login", {
+          username: this.username,
+          password: this.password,
+          rememberMe: this.rememberMe,
+        });
+        console.log("User logined:", response.data);
+        alert("Login successful!");
+        // Clear form after success
+        this.username = "";
+        this.password = "";
+        this.rememberMe = false;
+      } catch (error) {
+        console.error("Login failed:", error);
+        alert(
+          "Login failed: " + (error.response?.data?.error || "Server error")
+        );
+      }
+    },
+  },
 };
 </script>
 

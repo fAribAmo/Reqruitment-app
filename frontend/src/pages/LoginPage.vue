@@ -20,6 +20,7 @@ export default {
   methods: {
     handleLogin(credentials) {
       console.log("Received login data:", credentials);
+      this.$router.push("/dashboard");
     },
   },
 };
