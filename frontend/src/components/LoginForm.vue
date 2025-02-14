@@ -4,13 +4,27 @@
 
     <div class="form-group">
       <label for="username">Username</label>
-      <input id="username" v-model="username" type="username" placeholder="Enter your username" required />
+      <input
+        id="username"
+        v-model="username"
+        type="username"
+        placeholder="Enter your username"
+        required
+      />
     </div>
 
     <div class="form-group">
       <label for="password">Password</label>
-      <input id="password" v-model="password" type="password" placeholder="Enter your password" required />
+      <input
+        id="password"
+        v-model="password"
+        type="password"
+        placeholder="Enter your password"
+        required
+      />
     </div>
+
+    <router-link to="/register">Create account?</router-link>
 
     <button type="submit" class="btn-primary">Login</button>
   </form>
@@ -31,7 +45,7 @@ export default {
         username: this.username,
         password: this.password,
       };
-      this.$emit("login-submitted", credentials);  // ✅ Emit form data to LoginPage.vue
+      this.$emit("login-submitted", credentials); // ✅ Emit form data to LoginPage.vue
     },
   },
 };
