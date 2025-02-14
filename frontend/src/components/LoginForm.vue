@@ -4,32 +4,12 @@
 
     <div class="form-group">
       <label for="username">Username</label>
-      <input
-        id="username"
-        v-model="username"
-        type="username"
-        placeholder="Enter your username"
-        required
-      />
+      <input id="username" v-model="username" type="username" placeholder="Enter your username" required />
     </div>
 
     <div class="form-group">
       <label for="password">Password</label>
-      <input
-        id="password"
-        v-model="password"
-        type="password"
-        placeholder="Enter your password"
-        required
-      />
-    </div>
-
-    <div class="additional-options">
-      <label class="remember-me">
-        <input type="checkbox" v-model="rememberMe" />
-        Remember Me
-      </label>
-      <a href="../Register" class="register-link">Create account?</a>
+      <input id="password" v-model="password" type="password" placeholder="Enter your password" required />
     </div>
 
     <button type="submit" class="btn-primary">Login</button>
@@ -37,36 +17,21 @@
 </template>
 
 <script>
-import api from '../api';  // Import the API instance
 export default {
   name: "LoginForm",
   data() {
     return {
       username: "",
       password: "",
-      rememberMe: false,
     };
   },
   methods: {
-    async submitLogin() {
-      try {
-        const response = await api.post("/login", {
-          username: this.username,
-          password: this.password,
-          rememberMe: this.rememberMe,
-        });
-        console.log("User logined:", response.data);
-        alert("Login successful!");
-        // Clear form after success
-        this.username = "";
-        this.password = "";
-        this.rememberMe = false;
-      } catch (error) {
-        console.error("Login failed:", error);
-        alert(
-          "Login failed: " + (error.response?.data?.error || "Server error")
-        );
-      }
+    submitLogin() {
+      const credentials = {
+        username: this.username,
+        password: this.password,
+      };
+      this.$emit("login-submitted", credentials);  // ✅ Emit form data to LoginPage.vue
     },
   },
 };

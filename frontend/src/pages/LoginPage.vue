@@ -5,11 +5,12 @@
       <p>Please sign in to continue.</p>
     </div>
     <LoginForm @login-submitted="handleLogin" />
-
+    <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>  <!-- ✅ Show error message -->
   </div>
 </template>
 
 <script>
+import axios from "axios";  // ✅ Import Axios for API requests
 import LoginForm from "../components/LoginForm.vue";
 
 export default {
@@ -17,10 +18,28 @@ export default {
   components: {
     LoginForm,
   },
+  data() {
+    return {
+      errorMessage: "",  // ✅ Store login errors
+    };
+  },
   methods: {
-    handleLogin(credentials) {
-      console.log("Received login data:", credentials);
-      this.$router.push("/dashboard");
+    async handleLogin(credentials) {
+      console.log("Received login data:", credentials); // ✅ Debugging log
+
+      try {
+        // ✅ Send login request to backend
+        const response = await axios.post("http://localhost:3000/api/auth/login", credentials);
+
+        console.log("✅ Login Successful:", response.data);
+        
+        localStorage.setItem("token", response.data.token); // ✅ Store JWT token
+        this.$router.push("/dashboard");  // ✅ Redirect to dashboard
+
+      } catch (error) {
+        console.error("❌ Login Failed:", error.response?.data?.message || "Server error");
+        this.errorMessage = "Invalid username or password";  // ✅ Show error message
+      }
     },
   },
 };
@@ -48,5 +67,10 @@ export default {
 
 .intro-section p {
   color: #555;
+}
+
+.error-message {
+  color: red;
+  margin-top: 1rem;
 }
 </style>
