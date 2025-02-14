@@ -4,28 +4,42 @@
       <h1>Welcome</h1>
       <p>Create an account to get started.</p>
     </div>
-
     <RegisterForm @user-registered="handleUserRegistered" />
-
   </div>
 </template>
 
 <script>
+import axios from "axios"; // ✅ Import Axios for API requests
 import RegisterForm from "../components/RegisterForm.vue";
 
 export default {
   name: "RegisterPage",
   components: {
-    RegisterForm
+    RegisterForm,
   },
   methods: {
-    handleUserRegistered(formData) {
-      console.log("Received registration data:", formData);
-      //  Post the data to an API
-      //  redirect to a welcome page
-      this.$router.push("/apply");
-    }
-  }
+    async handleUserRegistered(formData) {
+      console.log("Received registration data:", formData); // ✅ Debugging
+
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/api/auth/register",
+          formData
+        );
+
+        console.log("✅ Registration Successful:", response.data);
+
+        // ✅ Redirect user to login page after successful registration
+        this.$router.push("/login");
+      } catch (error) {
+        console.error(
+          "❌ Registration Failed:",
+          error.response?.data?.message || "Server error"
+        );
+        alert("Registration failed. Please check your details and try again.");
+      }
+    },
+  },
 };
 </script>
 
