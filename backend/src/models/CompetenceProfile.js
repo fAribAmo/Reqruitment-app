@@ -36,7 +36,5 @@ const CompetenceProfile = sequelize.define(
   }
 );
 
-CompetenceProfile.belongsTo(Person, { foreignKey: "person_id" });
-CompetenceProfile.belongsTo(Competence, { foreignKey: "competence_id" });
 
 module.exports = CompetenceProfile;

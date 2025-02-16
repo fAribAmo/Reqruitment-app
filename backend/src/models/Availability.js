@@ -29,6 +29,5 @@ const Availability = sequelize.define(
     timestamps: false,
   }
 );
-Availability.belongsTo(Person, { foreignKey: "person_id" });
 
 module.exports = Availability;
