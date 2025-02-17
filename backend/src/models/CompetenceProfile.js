@@ -4,9 +4,8 @@
  */
 
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db.config");
-const Person = require("./User");
-const Competence = require("./Competence");
+const sequelize = require("../config/dbConnection");
+
 
 const CompetenceProfile = sequelize.define(
   "CompetenceProfile",

@@ -3,7 +3,6 @@
  */
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/dbConnection");
-const Person = require("./User");
 
 const Availability = sequelize.define(
   "Availability",
