@@ -1,6 +1,7 @@
-const { hashPassword, findUserByUsername } = require('../integration/authIntegration');
+const { hashPassword, comparePasswords, findUserByUsername } = require('../integration/authIntegration');
 const { generateJWT } = require('../middlewares/authMiddleware');
 const { Person } = require('../models');
+
 
 async function register(req, res) {
     const { name, surname, pnr, email, username, password, role_id } = req.body;
@@ -8,8 +9,13 @@ async function register(req, res) {
         const existingUser = await findUserByUsername(username);
         if (existingUser) return res.status(400).json({ message: 'Username already taken' });
 
-        const hashedPassword = await hashPassword(password);
-        await Person.create({ name, surname, pnr, email, username, password: hashedPassword, role_id });
+        /*
+        console.log("Hashing password before storing...");
+        const hashedPassword = await hashPassword(password);  //Ensure password is hashed
+        console.log("Hashed Password:", hashedPassword);
+        */
+
+        await Person.create({ name, surname, pnr, email, username, password, role_id });
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
@@ -21,7 +27,7 @@ async function login(req, res) {
     const { username, password } = req.body;
     try {
 
-        console.log("🔹 Login attempt for:", username);
+        console.log("Login attempt for:", username);
 
         const user = await findUserByUsername(username);
      
@@ -35,16 +41,19 @@ async function login(req, res) {
         console.log("Entered password:", password);
 
         if (!user.password) {
-            console.log("❌ No password set for user:", username);
+            console.log("No password set for user:", username);
             return res.status(400).json({ message: 'Some fields are missing. Please create a password.' });
         }
 
-        if (password !== user.password) {
-            console.log("Passwords do not matchfor:", username);
+        //Compare hashed password with entered password
+        const isMatch = await comparePasswords(password, user.password);
+        console.log("Password Match Result:", isMatch);
+        if (!isMatch) {
+            console.log("Passwords do not match for:", username);
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        console.log("🔹 Generating JWT token...");
+        console.log("Generating JWT token...");
 
         const token = generateJWT(user);
         console.log("Login successful!");

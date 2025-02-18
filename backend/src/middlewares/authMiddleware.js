@@ -40,4 +40,15 @@ function authenticateToken(req, res, next) {
     });
 }
 
-module.exports = { generateJWT, authenticateToken };
+//Enforce role-based access control
+function authorizeRoles(allowedRoles) {
+    return (req, res, next) => {
+        if (!req.user || !allowedRoles.includes(req.user.role)) {
+            return res.status(403).json({ message: "Access Denied" });
+        }
+        next();
+    };
+}
+
+
+module.exports = { generateJWT, authenticateToken, authorizeRoles };

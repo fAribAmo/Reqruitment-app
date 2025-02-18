@@ -24,12 +24,12 @@ Person.beforeCreate(async (user) => {
     if (!user.password) {
         throw new Error('Password is required');
     }
-    user.password = await bcrypt.hash(user.password, 10);
+    //user.password = await bcrypt.hash(user.password, 10);
 });
 
 Person.beforeUpdate(async (user) => {
     if (user.changed('password')) {
-        user.password = await bcrypt.hash(user.password, 10);
+        //user.password = await bcrypt.hash(user.password, 10);
     }
 });
 
