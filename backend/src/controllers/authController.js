@@ -1,4 +1,5 @@
-const { hashPassword, comparePasswords, generateJWT, findUserByUsername } = require('../integration/authIntegration');
+const { hashPassword, findUserByUsername } = require('../integration/authIntegration');
+const { generateJWT } = require('../middlewares/authMiddleware');
 const { Person } = require('../models');
 
 async function register(req, res) {
@@ -19,6 +20,9 @@ async function register(req, res) {
 async function login(req, res) {
     const { username, password } = req.body;
     try {
+
+        console.log("🔹 Login attempt for:", username);
+
         const user = await findUserByUsername(username);
      
         if (!user) {
@@ -30,18 +34,23 @@ async function login(req, res) {
         console.log("Stored password in DB:", user.password);
         console.log("Entered password:", password);
 
-        if (!user.password) return res.status(400).json({ message: 'Some fields are missing. Please create a password.' });
+        if (!user.password) {
+            console.log("❌ No password set for user:", username);
+            return res.status(400).json({ message: 'Some fields are missing. Please create a password.' });
+        }
 
         if (password !== user.password) {
-            console.log("Passwords do not match!");
+            console.log("Passwords do not matchfor:", username);
             return res.status(401).json({ message: "Invalid credentials" });
         }
+
+        console.log("🔹 Generating JWT token...");
 
         const token = generateJWT(user);
         console.log("Login successful!");
         res.json({ token, message: 'Login successful' });
     } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: 'Server error', error });
     }
 }
 
