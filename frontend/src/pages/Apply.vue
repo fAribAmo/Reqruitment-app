@@ -245,15 +245,14 @@ export default {
       // If validation passes, show the confirmation popup
       this.showConfirmation = true;
 
-      // Simulate saving to server, then clear or redirect
+      // Simulate saving to server, then clear and redirect
       setTimeout(() => {
         this.showConfirmation = false;
         this.message = "Your application has been submitted!";
-        this.$router.push("/dashboard");
-
         // clear localStorage
         localStorage.removeItem("expertiseEntries");
         localStorage.removeItem("availabilityPeriods");
+        this.$router.push("/dashboard");
       }, 2000);
     },
   },
