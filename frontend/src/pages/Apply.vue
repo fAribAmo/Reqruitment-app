@@ -244,7 +244,7 @@ export default {
       // (You could also validate fromDate < toDate if needed.)
       const hasValidAvailability = this.availabilityPeriods.some(
         (period) =>
-          period.fromDate.trim() !== "" && period.toDate.trim() !== ""
+          period.fromDate !== "" && period.toDate !== ""
       );
 
       if (!hasValidExpertise) {
