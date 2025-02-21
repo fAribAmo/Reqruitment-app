@@ -42,6 +42,7 @@
             <input
               type="number"
               min="0"
+              step="0.1"
               v-model="entry.experience"
               placeholder="Years of Exp"
               class="input-field"
@@ -68,7 +69,7 @@
           </button>
         </div>
 
-        <!-- Availability Section -->
+        <!-- Availability Section (Two Inputs: fromDate and toDate) -->
         <div>
           <label class="block text-gray-700 font-semibold mb-2">
             Availability Periods
@@ -80,12 +81,22 @@
             :key="idx"
             class="flex items-center gap-4 mb-3"
           >
+            <!-- "From Date" input -->
             <input
-              type="text"
-              v-model="availabilityPeriods[idx]"
-              placeholder="e.g., June - August"
+              type="date"
+              v-model="period.fromDate"
               class="input-field"
-              style="width: 50%"
+              style="width: 30%"
+              placeholder="From Date"
+            />
+
+            <!-- "To Date" input -->
+            <input
+              type="date"
+              v-model="period.toDate"
+              class="input-field"
+              style="width: 30%"
+              placeholder="To Date"
             />
 
             <!-- Remove one availability period -->
@@ -153,13 +164,12 @@ export default {
   data() {
     return {
       // Dropdown options for areas of expertise
-      expertiseOptions: ["Customer Service", "Ride Operator", "Food & Beverage"],
+      expertiseOptions: ["ticket sales", "lotteries", "roller coaster operation"],
 
       // Store multiple expertise entries in an array
-      // We'll load them from localStorage in mounted()
       expertiseEntries: [],
 
-      // Store multiple availability periods in an array
+      // Store multiple availability periods in an array (each entry is an object)
       availabilityPeriods: [],
 
       message: "",
@@ -168,26 +178,26 @@ export default {
     };
   },
   created() {
-    // You could also do this in mounted(), but created() is fine for localStorage
+    // Load from localStorage if available
     const savedExpertise = localStorage.getItem("expertiseEntries");
     const savedAvailability = localStorage.getItem("availabilityPeriods");
 
     if (savedExpertise) {
       this.expertiseEntries = JSON.parse(savedExpertise);
     } else {
-      // If there's nothing saved, initialize with one empty entry
+      // If nothing is saved, initialize with one empty entry
       this.expertiseEntries = [{ expertise: "", experience: "" }];
     }
 
     if (savedAvailability) {
       this.availabilityPeriods = JSON.parse(savedAvailability);
     } else {
-      // Initialize with one empty period if nothing saved
-      this.availabilityPeriods = [""];
+      // Initialize with one empty (from-to) period
+      this.availabilityPeriods = [{ fromDate: "", toDate: "" }];
     }
   },
   watch: {
-    // Watch each data array deeply so that localStorage is updated on any change
+    // Watch each array deeply so changes are saved to localStorage in real-time
     expertiseEntries: {
       deep: true,
       handler(newVal) {
@@ -210,27 +220,31 @@ export default {
     removeExpertise(index) {
       this.expertiseEntries.splice(index, 1);
     },
+
     // Add another availability period
     addAvailability() {
-      this.availabilityPeriods.push("");
+      this.availabilityPeriods.push({ fromDate: "", toDate: "" });
     },
     // Remove an availability period by index
     removeAvailability(index) {
       this.availabilityPeriods.splice(index, 1);
     },
+
     // Submit the form
     submitApplication() {
-      // Clear any previous messages
       this.message = "";
       this.errorMessage = "";
 
-      // Basic validation: at least one valid expertise with non-empty data
+      // Validate at least one valid expertise
       const hasValidExpertise = this.expertiseEntries.some(
         (item) => item.expertise && item.experience !== ""
       );
-      // And at least one non-empty availability period
+
+      // Validate at least one fromDate/toDate pair is non-empty
+      // (You could also validate fromDate < toDate if needed.)
       const hasValidAvailability = this.availabilityPeriods.some(
-        (period) => period.trim() !== ""
+        (period) =>
+          period.fromDate.trim() !== "" && period.toDate.trim() !== ""
       );
 
       if (!hasValidExpertise) {
@@ -238,18 +252,18 @@ export default {
         return;
       }
       if (!hasValidAvailability) {
-        this.errorMessage = "Please enter at least one availability period!";
+        this.errorMessage = "Please enter at least one valid availability period (From / To)!";
         return;
       }
 
-      // If validation passes, show the confirmation popup
+      // If validation passes, show confirmation
       this.showConfirmation = true;
 
-      // Simulate saving to server, then clear and redirect
+      // Simulate a delay before finalizing
       setTimeout(() => {
         this.showConfirmation = false;
         this.message = "Your application has been submitted!";
-        // clear localStorage
+        // reset localStorage and redirect
         localStorage.removeItem("expertiseEntries");
         localStorage.removeItem("availabilityPeriods");
         this.$router.push("/dashboard");
@@ -262,11 +276,11 @@ export default {
 <style scoped>
 /* Input fields with hover and focus effects */
 .input-field {
-  width: 100%;
-  padding: 0.6rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
+  padding: 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 20px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .input-field:focus {
@@ -276,14 +290,13 @@ export default {
 
 /* Submit button with animation */
 .submit-button {
-  width: 100%;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
+  padding: 12px;
+  background-color: #3b82f6;
+  color: white;
+  font-weight: bold;
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
+  transition: all 0.3s ease;
 }
 
 .submit-button:hover {
