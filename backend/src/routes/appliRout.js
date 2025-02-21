@@ -5,7 +5,7 @@ const express = require('express');
 const { applyForJob } = require('../controllers/appliController');
 const router = express.Router();
 
-router.post('/apply', applyForJob);
+router.post('/', applyForJob);
 
 
 module.exports = router;
