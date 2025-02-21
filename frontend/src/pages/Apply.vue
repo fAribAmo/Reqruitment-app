@@ -11,7 +11,7 @@
 
       <!-- Form -->
       <form @submit.prevent="submitApplication" class="mt-6 space-y-6">
-        
+
         <!-- Expertise & Experience Section -->
         <div>
           <label class="block text-gray-700 font-semibold mb-2">
@@ -24,6 +24,7 @@
             :key="index"
             class="flex items-center gap-4 mb-3"
           >
+            <!-- Expertise -->
             <select
               v-model="entry.expertise"
               class="input-field"
@@ -39,6 +40,7 @@
               </option>
             </select>
 
+            <!-- Experience -->
             <input
               type="number"
               min="0"
@@ -87,7 +89,6 @@
               v-model="period.fromDate"
               class="input-field"
               style="width: 30%"
-              placeholder="From Date"
             />
 
             <!-- "To Date" input -->
@@ -96,7 +97,6 @@
               v-model="period.toDate"
               class="input-field"
               style="width: 30%"
-              placeholder="To Date"
             />
 
             <!-- Remove one availability period -->
@@ -161,15 +161,17 @@
 
 <script>
 export default {
+  name: "Apply",
   data() {
     return {
       // Dropdown options for areas of expertise
       expertiseOptions: ["ticket sales", "lotteries", "roller coaster operation"],
 
-      // Store multiple expertise entries in an array
+      // We'll store multiple expertise entries in an array of objects
       expertiseEntries: [],
 
-      // Store multiple availability periods in an array (each entry is an object)
+      // We'll store multiple availability periods in an array of objects
+      // each object => { fromDate: "", toDate: "" }
       availabilityPeriods: [],
 
       message: "",
@@ -178,32 +180,47 @@ export default {
     };
   },
   created() {
-    // Load from localStorage if available
+    // Try to load existing data from localStorage
     const savedExpertise = localStorage.getItem("expertiseEntries");
     const savedAvailability = localStorage.getItem("availabilityPeriods");
 
+    // If we found saved expertise entries, parse them
     if (savedExpertise) {
-      this.expertiseEntries = JSON.parse(savedExpertise);
+      const parsedExpertise = JSON.parse(savedExpertise);
+      this.expertiseEntries = parsedExpertise;
     } else {
-      // If nothing is saved, initialize with one empty entry
+      // Otherwise, initialize with one empty object
       this.expertiseEntries = [{ expertise: "", experience: "" }];
     }
 
+    // Same for availability periods
     if (savedAvailability) {
-      this.availabilityPeriods = JSON.parse(savedAvailability);
+      const parsedAvailability = JSON.parse(savedAvailability);
+
+      // Optional: If you used to save strings, you can migrate them
+      // for example, if some items are empty strings "" or "June - August"
+      // we convert them into objects. (If you never had old data, skip this.)
+      this.availabilityPeriods = parsedAvailability.map((item) => {
+        if (typeof item === "string") {
+          // Migrate old format to new object format
+          return { fromDate: "", toDate: "" };
+        }
+        return item; // Assume it's already { fromDate, toDate }
+      });
     } else {
-      // Initialize with one empty (from-to) period
+      // If nothing in localStorage, start with one blank object
       this.availabilityPeriods = [{ fromDate: "", toDate: "" }];
     }
   },
   watch: {
-    // Watch each array deeply so changes are saved to localStorage in real-time
+    // Watch expertiseEntries deeply for changes
     expertiseEntries: {
       deep: true,
       handler(newVal) {
         localStorage.setItem("expertiseEntries", JSON.stringify(newVal));
       }
     },
+    // Watch availabilityPeriods deeply for changes
     availabilityPeriods: {
       deep: true,
       handler(newVal) {
@@ -235,20 +252,20 @@ export default {
       this.message = "";
       this.errorMessage = "";
 
-      // Validate at least one valid expertise
+      // Check that at least one valid expertise is entered
       const hasValidExpertise = this.expertiseEntries.some(
         (item) => item.expertise && item.experience !== ""
       );
 
-      // Validate at least one fromDate/toDate pair is non-empty
-      // (You could also validate fromDate < toDate if needed.)
+      // Check that at least one availability period is fully filled out
       const hasValidAvailability = this.availabilityPeriods.some(
         (period) =>
-          period.fromDate !== "" && period.toDate !== ""
+          period.fromDate && period.fromDate.trim() !== "" &&
+          period.toDate && period.toDate.trim() !== ""
       );
 
       if (!hasValidExpertise) {
-        this.errorMessage = "Please enter at least one valid area of expertise and years of experience!";
+        this.errorMessage = "Please enter at least one area of expertise and years of experience!";
         return;
       }
       if (!hasValidAvailability) {
@@ -256,18 +273,19 @@ export default {
         return;
       }
 
-      // If validation passes, show confirmation
+      // If validation passes, show the confirmation popup
       this.showConfirmation = true;
 
       // Simulate a delay before finalizing
       setTimeout(() => {
         this.showConfirmation = false;
         this.message = "Your application has been submitted!";
-        // reset localStorage and redirect
+        
+        //  reset localStorage and redirect
         localStorage.removeItem("expertiseEntries");
         localStorage.removeItem("availabilityPeriods");
         this.$router.push("/dashboard");
-      }, 2000);
+      }, 1500);
     },
   },
 };
