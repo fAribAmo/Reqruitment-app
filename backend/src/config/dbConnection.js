@@ -1,4 +1,7 @@
-/**DB connection using Sequlize ORM */
+/**
+ * DB connection using Sequlize ORM 
+ * */
+
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 

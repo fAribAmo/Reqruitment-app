@@ -26,6 +26,9 @@
           </ul>
         </div>
         <p v-else class="mt-4 text-gray-600">You have not applied for any positions yet.</p>
+        <button @click="logout" class="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-600">
+          Logout
+        </button>
 
         <!-- Button to apply for a new position -->
         <div class="mt-6">
@@ -56,6 +59,12 @@ export default {
         console.error('Error fetching applications:', error);
       }
     },
+
+    logout() {
+    localStorage.removeItem("user"); // ✅ Remove stored user data
+    console.log("✅ User logged out, redirecting to Login Page...");
+    this.$router.push("/login"); // ✅ Navigate to login page
+  }
     
   },
   created() {
@@ -65,5 +74,6 @@ export default {
     // Fetch applications from the backend
     this.fetchApplications();
   }
+  
 };
 </script>
