@@ -252,7 +252,7 @@ export default {
         // clear localStorage
         localStorage.removeItem("expertiseEntries");
         localStorage.removeItem("availabilityPeriods");
-        this.$router.push("/dashboard");
+        
       }, 2000);
     },
   },

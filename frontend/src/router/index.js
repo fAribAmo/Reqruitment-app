@@ -42,6 +42,11 @@ router.beforeEach((to, from, next) => {
       return next('/login');
     }
   } else {
+    // Allow users to visit `/apply`
+    if (to.path === '/apply') {
+      return next();
+    }
+
     if (user.role == 1 && to.path !== '/recruiter') {
       console.log("Redirecting Recruiter to /recruiter");
       return next('/recruiter'); 
