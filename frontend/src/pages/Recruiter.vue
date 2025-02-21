@@ -11,6 +11,7 @@
           @applicant-selected="handleApplicantSelected"
         />
       </div>
+      <button @click="logout" class="logout-button">Logout</button>
 
       <!-- RIGHT BOX: Applicant Details -->
       <div class="right-section" v-if="selectedApplicant">
@@ -63,7 +64,12 @@ export default {
     applyForApplicant(applicant) {
       // handle "apply" action (e.g. mark as reviewed, accepted, etc.)
       console.log('Applying for:', applicant)
-    }
+    },
+     logout() {
+    localStorage.removeItem("user"); // ✅ Remove user data
+    console.log("✅ User logged out, navigating to Login Page...");
+    this.$router.push("/login"); // ✅ Redirect to login page
+  }
   }
 }
 </script>
