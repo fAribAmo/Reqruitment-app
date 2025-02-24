@@ -42,6 +42,7 @@
             <input
               type="number"
               min="0"
+              step="0.1"
               v-model="entry.experience"
               placeholder="Years of Exp"
               class="input-field"
@@ -80,12 +81,20 @@
             :key="idx"
             class="flex items-center gap-4 mb-3"
           >
+            <!-- "From Date" input -->
             <input
-              type="text"
-              v-model="availabilityPeriods[idx]"
-              placeholder="e.g., June - August"
+              type="date"
+              v-model="period.fromDate"
               class="input-field"
-              style="width: 50%"
+              style="width: 30%"
+            />
+
+            <!-- "To Date" input -->
+            <input
+              type="date"
+              v-model="period.toDate"
+              class="input-field"
+              style="width: 30%"
             />
 
             <!-- Remove one availability period -->
@@ -138,7 +147,7 @@
         class="bg-white p-6 rounded-lg shadow-lg text-center transform scale-95 transition-transform duration-300 animate-popup"
       >
         <h3 class="text-xl font-semibold text-gray-700">
-          ✅ Application Submitted!
+           Application Submitted!
         </h3>
         <p class="text-gray-600 mt-2">
           Redirecting you to the dashboard...
@@ -149,11 +158,12 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
       // Dropdown options for areas of expertise
-      expertiseOptions: ["Customer Service", "Ride Operator", "Food & Beverage"],
+      expertiseOptions: ["ticket sales", "lotteries", "roller coaster operation"],
 
       // Store multiple expertise entries in an array
       // We'll load them from localStorage in mounted()
@@ -161,6 +171,8 @@ export default {
 
       // Store multiple availability periods in an array
       availabilityPeriods: [],
+
+      person_id: null,
 
       message: "",
       errorMessage: "",
@@ -171,6 +183,16 @@ export default {
     // You could also do this in mounted(), but created() is fine for localStorage
     const savedExpertise = localStorage.getItem("expertiseEntries");
     const savedAvailability = localStorage.getItem("availabilityPeriods");
+    const savedUser = localStorage.getItem("user");
+
+    if (savedUser) {
+      try {
+        const user = JSON.parse(savedUser);
+        this.person_id = user.person_id || null;
+      } catch (e) {
+        console.error("Invalid user data in localStorage", e);
+      }
+    }
 
     if (savedExpertise) {
       this.expertiseEntries = JSON.parse(savedExpertise);
@@ -183,7 +205,7 @@ export default {
       this.availabilityPeriods = JSON.parse(savedAvailability);
     } else {
       // Initialize with one empty period if nothing saved
-      this.availabilityPeriods = [""];
+      this.availabilityPeriods = [{ fromDate: "", toDate: "" }];
     }
   },
   watch: {
@@ -212,7 +234,7 @@ export default {
     },
     // Add another availability period
     addAvailability() {
-      this.availabilityPeriods.push("");
+      this.availabilityPeriods.push({ fromDate: "", toDate: "" });
     },
     // Remove an availability period by index
     removeAvailability(index) {
@@ -220,6 +242,9 @@ export default {
     },
     // Submit the form
     submitApplication() {
+      //define user
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+
       // Clear any previous messages
       this.message = "";
       this.errorMessage = "";
@@ -230,7 +255,7 @@ export default {
       );
       // And at least one non-empty availability period
       const hasValidAvailability = this.availabilityPeriods.some(
-        (period) => period.trim() !== ""
+        (period) => period !== ""
       );
 
       if (!hasValidExpertise) {
@@ -245,16 +270,51 @@ export default {
       // If validation passes, show the confirmation popup
       this.showConfirmation = true;
 
-      // Simulate saving to server, then clear and redirect
-      setTimeout(() => {
-        this.showConfirmation = false;
-        this.message = "Your application has been submitted!";
-        // clear localStorage
-        localStorage.removeItem("expertiseEntries");
-        localStorage.removeItem("availabilityPeriods");
-        
-      }, 2000);
-    },
+// Prepare the payload for the server
+const applicationData = {
+  person_id: this.person_id,
+  expertiseEntries: this.expertiseEntries.map(entry => ({
+    expertise: entry.expertise,
+    years_of_experience: entry.experience
+  })),
+  availability: this.availabilityPeriods.map(period => ({
+    from_date: period.fromDate,
+    to_date: period.toDate
+  }))
+};
+
+
+  console.log("Submitting application with data:", JSON.stringify({
+  person_id: this.person_id,
+  expertiseEntries: this.expertiseEntries,
+  availability: this.availabilityPeriods
+}, null, 2));
+
+console.log("Submitting application data that is:", applicationData);
+console.log("User token in APply",user.token);
+  // Send the application data to the server using axios
+  axios
+    .post("http://localhost:3000/api/apply", applicationData, {
+      headers: {
+        Authorization: `Bearer ${user.token}`, // Send the token
+      },
+    })
+    .then((response) => {
+      // Handle success (you can customize this depending on your API response)
+      this.showConfirmation = false;
+      this.message = "Your application has been successfully submitted!";
+
+      // Clear localStorage
+      localStorage.removeItem("expertiseEntries");
+      localStorage.removeItem("availabilityPeriods");
+    })
+    .catch((error) => {
+      // Handle error
+      this.showConfirmation = false;
+      this.errorMessage = "There was an error submitting your application. Please try again.";
+      console.error("Error submitting application:", error);
+    });
+   },
   },
 };
 </script>

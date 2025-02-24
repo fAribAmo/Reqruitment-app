@@ -1,16 +1,15 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/dbConnection");
-
-
 /**
- * Sequelize model representing the Availability table in the database.
- * 
+ * Sequelize model defining the Availability table in the database.
+ *
  * @typedef {Object} Availability
- * @property {number} availability_id - Unique identifier for each availability entry.
- * @property {number} person_id - The identifier of the person who is available.
+ * @property {number} availability_id - Unique identifier for the availability record (Primary Key).
+ * @property {number} person_id - Identifier for the person associated with the availability (Foreign Key).
  * @property {string} from_date - The start date of the availability period.
  * @property {string} to_date - The end date of the availability period.
  */
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/dbConnection");
+
 const Availability = sequelize.define(
   "Availability",
   {

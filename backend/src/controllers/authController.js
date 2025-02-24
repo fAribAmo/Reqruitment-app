@@ -94,10 +94,11 @@ async function login(req, res) {
         
         console.log("Login successful!");
 
-        //Send both token and role in response
+        //Send both token, person_id and role in response
         res.json({ 
             token, 
             role: user.role_id,  //Include role_id in response
+            person_id: user.person_id,
             message: 'Login successful'
         });
 

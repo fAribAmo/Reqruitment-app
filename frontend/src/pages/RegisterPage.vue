@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import axios from "axios"; // ✅ Import Axios for API requests
+import axios from "axios"; // Import Axios for API requests
 import RegisterForm from "../components/RegisterForm.vue";
 
 export default {
@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     async handleUserRegistered(formData) {
-      console.log("Received registration data:", formData); // ✅ Debugging
+      console.log("Received registration data:", formData); // Debugging
 
       try {
         const response = await axios.post(
@@ -27,9 +27,9 @@ export default {
           formData
         );
 
-        console.log("✅ Registration Successful:", response.data);
+        console.log(" Registration Successful:", response.data);
 
-        // ✅ Redirect user to login page after successful registration
+        //  Redirect user to login page after successful registration
         this.$router.push("/login");
       } catch (error) {
         console.error(

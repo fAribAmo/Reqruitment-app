@@ -1,14 +1,16 @@
+/**
+ * Sequelize model defining the Competence Profile table in the database.
+ *
+ * @typedef {Object} CompetenceProfile
+ * @property {number} competence_profile_id - Unique identifier for the competence profile (Primary Key).
+ * @property {number} person_id - Foreign key linking to the person associated with this competence profile.
+ * @property {number} competence_id - Foreign key linking to the specific competence (skill or expertise) for this profile.
+ * @property {number} years_of_experience - The number of years of experience the person has in this competence.
+ */
+
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/dbConnection");
-/**
- * Sequelize model representing the CompetenceProfile table in the database.
- * 
- * @typedef {Object} CompetenceProfile
- * @property {number} competence_profile_id - Unique identifier for each competence profile entry.
- * @property {number} person_id - The identifier of the person associated with the competence profile.
- * @property {number} competence_id - The identifier of the competence associated with the profile.
- * @property {number} years_of_experience - The number of years of experience the person has in the given competence.
- */
+
 
 const CompetenceProfile = sequelize.define(
   "CompetenceProfile",

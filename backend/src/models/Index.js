@@ -1,6 +1,6 @@
 /** 
  *  @fileoverview
- * Initializes all Sequelize models and sets up their associations (relationships).
+ * Initializes all Sequelize models and sets up their associations.
  * This module imports and exports all models and defines the necessary relationships between them.
 */
 const sequelize = require('../config/dbConnection');
