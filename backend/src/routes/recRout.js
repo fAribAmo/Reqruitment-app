@@ -1,6 +1,6 @@
 const express = require("express");
 const { authenticateToken, authorizeRoles } = require("../middlewares/authMiddleware");
-const { getRecruiterData } = require("../controllers/recController");
+const { listAllApplications } = require("../controllers/recController");
 const router = express.Router();
 
 /**
