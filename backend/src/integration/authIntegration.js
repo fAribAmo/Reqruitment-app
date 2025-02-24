@@ -1,21 +1,7 @@
 const bcrypt = require('bcryptjs');
 const { Person } = require('../models');
 
-/**
- * Hashes a given password using bcrypt for secure storage.
- * 
- * @async
- * @function hashPassword
- * @param {string} password - The plain text password to be hashed.
- * @returns {Promise<string>} The hashed password.
- */
 
-async function hashPassword(password) {
-    console.log("Hashing password:", password);
-    const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("Hashed Password Generated:", hashedPassword);
-    return hashedPassword;
-}
 
 /**
  * Retrieves a user from the database by their username.
@@ -30,43 +16,17 @@ async function findUserByUsername(username) {
     return await Person.findOne({ where: { username } });
 }
 
-/*
-async function comparePasswords(inputPassword, storedPassword) {
-    console.log("Comparing passwords...");
-    console.log("Entered Password (Plaintext):", inputPassword);
-    console.log("Stored Password (Hashed):", storedPassword);
-
-    try {
-        if (!inputPassword || !storedPassword) {
-            console.error("Missing password input!");
-            return false;
-        }
-
-        // Use bcrypt.compare to check plain-text vs hashed password
-        const match = await bcrypt.compare(inputPassword, storedPassword);
-        console.log("Password Match:", match);
-        return match;
-    } catch (error) {
-        console.error("Error comparing passwords:", error);
-        return false;
-    }
-}
-*/
-
 /**
- * Compares an input password with the stored password.
- * 
+ * Creates a new user in the database.
  * @async
- * @function comparePasswords
- * @param {string} inputPassword - The plain text password entered by the user.
- * @param {string} storedPassword - The stored password in the database.
- * @returns {Promise<boolean>} `true` if passwords match, otherwise `false`.
+ * @function createUser
+ * @param {Object} userData - The user data to save in the database.
+ * @returns {Promise<Object>} The newly created user.
  */
-
-async function comparePasswords(inputPassword, storedPassword) {
-    return inputPassword === storedPassword;
+async function createUser(userData) {
+    return await Person.create(userData); 
 }
 
 
 
-module.exports = { hashPassword, comparePasswords, findUserByUsername };
+module.exports = { findUserByUsername, createUser };

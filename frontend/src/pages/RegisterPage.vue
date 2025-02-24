@@ -36,7 +36,7 @@ export default {
           "❌ Registration Failed:",
           error.response?.data?.message || "Server error"
         );
-        alert("Registration failed. Please check your details and try again.");
+        alert("The username is already taken.");
       }
     },
   },

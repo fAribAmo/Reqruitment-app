@@ -2,7 +2,7 @@
  * Authentication controller handling API calls for user registration, login, and password management.
  * @module authController
  */
-const { hashPassword, findUserByUsername } = require('../integration/authIntegration');
+const { createUser, findUserByUsername } = require('../integration/authIntegration');
 const { generateJWT } = require('../middlewares/authMiddleware');
 const { Person } = require('../models');
 
@@ -12,18 +12,8 @@ const { Person } = require('../models');
  * @async
  * @function register
  * @param {Object} req - Express request object.
- * @param {Object} req.body - Request body containing user details.
- * @param {string} req.body.name - User's first name.
- * @param {string} req.body.surname - User's surname.
- * @param {string} req.body.pnr - User's personal number.
- * @param {string} req.body.email - User's email address.
- * @param {string} req.body.username - Chosen username.
- * @param {string} req.body.password - User's password.
- * @param {number} req.body.role_id - User's role ID.
  * @param {Object} res - Express response object.
- * @returns {Promise<void>} Responds with JSON: `{ message: string }`.
- * @throws {Error} 400 - If username is already taken.
- * @throws {Error} 500 - If a server error occurs.
+ * @returns {Promise<void>} Responds with `{ message: string }`
  */
 async function register(req, res) {
     const { name, surname, pnr, email, username, password, role_id } = req.body;
@@ -37,16 +27,16 @@ async function register(req, res) {
         console.log("Hashed Password:", hashedPassword);
         */
 
-        await Person.create({ name, surname, pnr, email, username, password, role_id });
+        await createUser({ name, surname, pnr, email, username, password, role_id });
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
-    }
+    } 
 }
 
 /**
- * Logs in a user by verifying credentials and returning a JWT token.
+ * Logs in a user by verifying credentials and returning a JWT token and person_id
  * 
  * @async
  * @function login
