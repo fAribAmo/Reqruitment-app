@@ -11,4 +11,3 @@ const router = express.Router();
 router.get("/recruiter-data", authenticateToken, authorizeRoles([1]), listAllApplications);
 
 module.exports = router;
-
