@@ -1,7 +1,7 @@
 <template>
   <div class="applicant-details">
     <h2>Applicant Submission</h2>
-    <p><strong>ID:</strong> {{ applicant.id }}</p>
+    <p><strong>ID:</strong> {{ applicant.personId }}</p>
     <p><strong>Name:</strong> {{ applicant.fullName }}</p>
     <p><strong>Email:</strong> {{ applicant.email }}</p>
     <p><strong>Resume:</strong> <a :href="applicant.resume" target="_blank">View Resume</a></p>
