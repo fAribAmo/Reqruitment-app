@@ -8,6 +8,7 @@ const router = express.Router();
  * @description Defines routes accessible only by recruiters.
  */
 
-router.get("/recruiter-data", authenticateToken, authorizeRoles([1]), getRecruiterData);
+router.get("/recruiter-data", authenticateToken, authorizeRoles([1]), listAllApplications);
 
 module.exports = router;
+
