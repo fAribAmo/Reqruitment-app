@@ -17,6 +17,7 @@
       @close-details="selectedApplicant = null"
     />
   </div>
+  <button @click="logout" class="logout-button">Logout</button>
 </template>
 
 <script>
@@ -75,6 +76,11 @@ export default {
         applicant.status = newStatus;
       }
     },
+    logout() {
+      localStorage.removeItem("user"); // ✅ Remove user data
+      console.log("✅ User logged out, navigating to Login Page...");
+      this.$router.push("/login"); // ✅ Redirect to login page
+    }
   },
 };
 </script>
