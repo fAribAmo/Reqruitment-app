@@ -5,12 +5,12 @@
       <p>Please sign in to continue.</p>
     </div>
     <LoginForm @login-submitted="handleLogin" />
-    <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>  <!-- ✅ Show error message -->
+    <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>  <!--  Show error message -->
   </div>
 </template>
 
 <script>
-import axios from "axios";  // ✅ Import Axios for API requests
+import axios from "axios";  //  Import Axios for API requests
 import LoginForm from "../components/LoginForm.vue";
 
 export default {
@@ -20,7 +20,7 @@ export default {
   },
   data() {
     return {
-      errorMessage: "",  // ✅ Store login errors
+      errorMessage: "",  //  Store login errors
     };
   },
   methods: {
@@ -45,12 +45,12 @@ export default {
 
         console.log("Full Backend Response:", response.data); //Debug response
 
-        if (!response.data || !response.data.token || response.data.role === undefined) {
+        if (!response.data || !response.data.token || response.data.role === undefined || !response.data.person_id) {
           throw new Error("Invalid response from server");
         }
 
         //Store token and role in localStorage
-        localStorage.setItem("user", JSON.stringify({ token: response.data.token, role: response.data.role }));
+        localStorage.setItem("user", JSON.stringify({ token: response.data.token, role: response.data.role, person_id: response.data.person_id }));
 
         console.log("Stored User:", localStorage.getItem("user")); //Debug localStorage
 

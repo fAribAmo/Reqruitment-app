@@ -98,7 +98,7 @@ export default {
         role_id: this.role_id,
       };
 
-      this.$emit("user-registered", formData); // ✅ Emit form data to RegisterPage.vue
+      this.$emit("user-registered", formData); // Emit form data to RegisterPage.vue
     },
   },
 };

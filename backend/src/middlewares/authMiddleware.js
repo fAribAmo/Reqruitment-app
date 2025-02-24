@@ -49,8 +49,15 @@ function authenticateToken(req, res, next) {
     const token = req.header('Authorization')?.split(' ')[1];
     if (!token) return res.status(401).json({ message: 'Access denied. No token provided.' });
 
-    jwt.verify(token, jwtSecret, (err, user) => {
-        if (err) return res.status(403).json({ message: 'Invalid token.' });
+    jwt.verify(token, jwtSecret, (err, user) => {        
+        console.log("JWT Verification Error:", err);
+        if (err) {
+            if (err.name === 'TokenExpiredError') {
+                return res.status(401).json({ message: 'Session expired. Please log in again.' });
+            }
+            console.log("JWT Verification Error:", err);
+            return res.status(403).json({ message: 'Invalid token.' });
+        }        
         req.user = user;
         next();
     });

@@ -7,6 +7,7 @@ const express = require('express');
 const cors = require('cors');
 
 const authRoutes = require('./routes/authRout');
+const appliRoutes = require('./routes/appliRout');
 const { sequelize } = require('./models');
 
 const app = express();
@@ -34,6 +35,15 @@ app.use(express.json());
  * @route {POST} /api/auth
  */
 app.use('/api/auth', authRoutes);
+
+/**
+ * Application Routes.
+ * Handles job application submissions by authenticated applicants.
+ * 
+ * @route {POST} /api/apply
+ */
+app.use('/api', appliRoutes);
+
 
 /**
  * Root route to check if the backend is running.

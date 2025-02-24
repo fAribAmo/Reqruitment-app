@@ -61,9 +61,9 @@ export default {
     },
 
     logout() {
-    localStorage.removeItem("user"); // ✅ Remove stored user data
-    console.log("✅ User logged out, redirecting to Login Page...");
-    this.$router.push("/login"); // ✅ Navigate to login page
+    localStorage.removeItem("user"); //  Remove stored user data
+    console.log(" User logged out, redirecting to Login Page...");
+    this.$router.push("/login"); //  Navigate to login page
   }
     
   },

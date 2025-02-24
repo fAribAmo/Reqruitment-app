@@ -45,7 +45,7 @@ export default {
         username: this.username,
         password: this.password,
       };
-      this.$emit("login-submitted", credentials); // ✅ Emit form data to LoginPage.vue
+      this.$emit("login-submitted", credentials); // Emit form data to LoginPage.vue
     },
   },
 };
