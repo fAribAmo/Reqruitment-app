@@ -7,8 +7,8 @@
     <p><strong>Resume:</strong> <a :href="applicant.resume" target="_blank">View Resume</a></p>
     <p><strong>Date Applied:</strong> {{ applicant.dateApplied }}</p>
     <p><strong>Status:</strong> <span :class="statusClass">{{ applicant.status }}</span></p>
-    <p><strong>Expertise:</strong> {{ applicant.expertise.join(", ") }}</p>
-    <p><strong>Availability:</strong> {{ applicant.availability.join(", ") }}</p>
+    <p><strong>Expertise:</strong> {{ applicant.expertise && applicant.expertise.length ? applicant.expertise.join(", ") : 'No expertise data' }}</p>
+    <p><strong>Availability:</strong> {{ applicant.availability && applicant.availability.length ? applicant.availability.join(", ") : 'No availability data' }}</p>
 
     <!-- Status Update -->
     <div class="status-update">
