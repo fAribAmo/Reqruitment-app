@@ -1,6 +1,6 @@
 const express = require("express");
 const { authenticateToken, authorizeRoles } = require("../middlewares/authMiddleware");
-const { listAllApplications } = require("../controllers/recController");
+const { getApplicationData } = require("../controllers/recController");
 const router = express.Router();
 
 /**
@@ -8,6 +8,6 @@ const router = express.Router();
  * @description Defines routes accessible only by recruiters.
  */
 
-router.get("/recruiter-data", authenticateToken, authorizeRoles([1]), listAllApplications);
+router.get("/recruiter", authenticateToken, authorizeRoles([1]), getApplicationData);
 
 module.exports = router;

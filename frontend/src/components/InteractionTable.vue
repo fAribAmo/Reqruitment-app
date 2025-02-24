@@ -14,11 +14,11 @@
       <tbody>
         <tr
           v-for="application in applications"
-          :key="application.id"
+          :key="application.personId"
           @click="selectApplicant(application)"
-          :class="{ selected: application.id === selectedApplicantId }"
+          :class="{ selected: application.personId === selectedApplicantId }"
         >
-          <td>{{ application.id }}</td>
+          <td>{{ application.personId }}</td>
           <td>{{ application.fullName }}</td>
           <td>{{ application.email }}</td>
           <td>{{ application.status }}</td>
