@@ -1,100 +1,78 @@
 <template>
   <div class="recruiter-page">
-    <h1 class="page-title">Welcome, Recruiter</h1>
+    <h1>Recruiter Dashboard</h1>
 
-    <!-- Search Input -->
-    <input 
-      v-model="searchQuery" 
-      placeholder="Search applicants..." 
-      class="search-box"
+    <!-- Interaction Table -->
+    <InteractionTable 
+      :applications="applications" 
+      :selectedApplicantId="selectedApplicant ? selectedApplicant.id : null"
+      @applicant-selected="handleApplicantSelection"
     />
 
-    <div class="page-container">
-      <!-- LEFT BOX: Interaction Table displaying list of applications -->
-      <div class="left-section">
-        <InteractionTable
-          :applications="filteredApplications"
-          :selectedApplicantId="selectedApplicant ? selectedApplicant.id : null"
-          @applicant-selected="handleApplicantSelected"
-        />
-      </div>
-
-      <!-- RIGHT BOX: Applicant Details - shown when an applicant is selected -->
-      <div class="right-section" v-if="selectedApplicant">
-        <ApplicantDetails 
-          :applicant="selectedApplicant"
-          @close-details="closeApplicantDetails"
-          @update-status="updateApplicationStatus"
-        />
-      </div>
-    </div>
+    <!-- Applicant Details -->
+    <ApplicantDetails 
+      v-if="selectedApplicant"
+      :applicant="selectedApplicant"
+      @update-status="updateApplicantStatus"
+      @close-details="selectedApplicant = null"
+    />
   </div>
 </template>
 
 <script>
-import axios from "axios";
 import InteractionTable from "../components/InteractionTable.vue";
 import ApplicantDetails from "../components/ApplicantDetails.vue";
 
 export default {
-  name: "RecruiterPage",
   components: {
     InteractionTable,
     ApplicantDetails,
   },
   data() {
     return {
-      applications: [], 
+      applications: [
+        {
+          id: 1,
+          fullName: "Alice Johnson",
+          email: "alice@example.com",
+          resume: "https://example.com/resume/alice.pdf",
+          dateApplied: "2024-02-15",
+          status: "Unhandled",
+          expertise: ["JavaScript", "Vue", "Node.js"],
+          availability: ["Full-time"],
+        },
+        {
+          id: 2,
+          fullName: "Bob Smith",
+          email: "bob@example.com",
+          resume: "https://example.com/resume/bob.pdf",
+          dateApplied: "2024-02-14",
+          status: "Accepted",
+          expertise: ["Python", "Django", "React"],
+          availability: ["Part-time"],
+        },
+        {
+          id: 3,
+          fullName: "Charlie Davis",
+          email: "charlie@example.com",
+          resume: "https://example.com/resume/charlie.pdf",
+          dateApplied: "2024-02-10",
+          status: "Rejected",
+          expertise: ["Java", "Spring Boot", "SQL"],
+          availability: ["Remote"],
+        },
+      ],
       selectedApplicant: null,
-      searchQuery: "" // Search functionality
     };
   },
-  created() {
-    this.fetchApplications(); 
-  },
-  computed: {
-    filteredApplications() {
-      return this.applications.filter(app => 
-        app.fullName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        app.email.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        app.status.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    }
-  },
   methods: {
-    // Fetch applications from the backend
-    async fetchApplications() {
-      try {
-        const token = localStorage.getItem("token"); 
-        const response = await axios.get("http://localhost:3000/applications", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        this.applications = response.data; 
-      } catch (error) {
-        console.error("Error fetching applications:", error);
-      }
-    },
-    // Handle selection of an applicant from the interaction table
-    handleApplicantSelected(applicant) {
+    handleApplicantSelection(applicant) {
       this.selectedApplicant = applicant;
     },
-    // Close the applicant details view
-    closeApplicantDetails() {
-      this.selectedApplicant = null;
-    },
-    // Update the application status in the backend
-    async updateApplicationStatus(id, status) {
-      try {
-        const token = localStorage.getItem("token");
-        await axios.patch(
-          `http://localhost:3000/applications/${id}`,
-          { status },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        this.fetchApplications(); // Refresh applications list after update
-        this.selectedApplicant = null; // Close details view after updating status
-      } catch (error) {
-        console.error("Error updating application status:", error);
+    updateApplicantStatus(id, newStatus) {
+      const applicant = this.applications.find(app => app.id === id);
+      if (applicant) {
+        applicant.status = newStatus;
       }
     },
   },
@@ -103,63 +81,6 @@ export default {
 
 <style scoped>
 .recruiter-page {
-  min-height: 100vh;
-  padding: 1rem;
-  box-sizing: border-box;
-}
-
-/* Search Box */
-.search-box {
-  width: 100%;
-  max-width: 400px;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.page-title {
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.page-container {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: flex-start;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.left-section {
-  flex: 1;
-  max-width: 500px;
-  background-color: #14213d;
-  color: #ffffff;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.right-section {
-  flex: 1;
-  max-width: 500px;
-  background-color: #064420;
-  color: #ffffff;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .page-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .left-section, .right-section {
-    max-width: 100%;
-  }
+  padding: 2rem;
 }
 </style>
