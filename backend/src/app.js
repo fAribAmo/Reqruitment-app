@@ -8,6 +8,7 @@ const cors = require('cors');
 
 const authRoutes = require('./routes/authRout');
 const appliRoutes = require('./routes/appliRout');
+const recRoutes = require('./routes/recRout');
 const { sequelize } = require('./models');
 
 const app = express();
@@ -44,6 +45,14 @@ app.use('/api/auth', authRoutes);
  */
 app.use('/api', appliRoutes);
 
+/**
+ * Recruiter Routes.
+ * Handles routes related to recruiters, including job application data retrieval and management.
+ * These routes are accessible only to authenticated recruiters. 
+ * 
+ * @route {GET} /api/recruiter - Fetches all job applications.
+ */
+app.use('/api', recRoutes);
 
 /**
  * Root route to check if the backend is running.

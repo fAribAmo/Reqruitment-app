@@ -1,14 +1,19 @@
 <template>
   <div class="applicant-details">
     <h2>Applicant Submission</h2>
-    <p><strong>ID:</strong> {{ applicant.id }}</p>
+    <p><strong>ID:</strong> {{ applicant.personId }}</p>
     <p><strong>Name:</strong> {{ applicant.fullName }}</p>
     <p><strong>Email:</strong> {{ applicant.email }}</p>
     <p><strong>Resume:</strong> <a :href="applicant.resume" target="_blank">View Resume</a></p>
     <p><strong>Date Applied:</strong> {{ applicant.dateApplied }}</p>
     <p><strong>Status:</strong> <span :class="statusClass">{{ applicant.status }}</span></p>
-    <p><strong>Expertise:</strong> {{ applicant.expertise.join(", ") }}</p>
-    <p><strong>Availability:</strong> {{ applicant.availability.join(", ") }}</p>
+    <p><strong>Expertise:</strong> {{ applicant.competences && applicant.competences.length ? applicant.competences.join(", ") : 'No expertise data' }}</p>
+    <p><strong>Availability:</strong></p>
+<ul>
+  <li v-for="(item, index) in applicant.availability" :key="index">
+    {{ item }}
+  </li>
+</ul>
 
     <!-- Status Update -->
     <div class="status-update">

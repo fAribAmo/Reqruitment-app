@@ -23,6 +23,7 @@
 <script>
 import InteractionTable from "../components/InteractionTable.vue";
 import ApplicantDetails from "../components/ApplicantDetails.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -31,42 +32,31 @@ export default {
   },
   data() {
     return {
-      applications: [
-        {
-          id: 1,
-          fullName: "Alice Johnson",
-          email: "alice@example.com",
-          resume: "https://example.com/resume/alice.pdf",
-          dateApplied: "2024-02-15",
-          status: "Unhandled",
-          expertise: ["JavaScript", "Vue", "Node.js"],
-          availability: ["Full-time"],
-        },
-        {
-          id: 2,
-          fullName: "Bob Smith",
-          email: "bob@example.com",
-          resume: "https://example.com/resume/bob.pdf",
-          dateApplied: "2024-02-14",
-          status: "Accepted",
-          expertise: ["Python", "Django", "React"],
-          availability: ["Part-time"],
-        },
-        {
-          id: 3,
-          fullName: "Charlie Davis",
-          email: "charlie@example.com",
-          resume: "https://example.com/resume/charlie.pdf",
-          dateApplied: "2024-02-10",
-          status: "Rejected",
-          expertise: ["Java", "Spring Boot", "SQL"],
-          availability: ["Remote"],
-        },
-      ],
+      applications: [],
       selectedApplicant: null,
     };
   },
   methods: {
+    async getApplications() { 
+      try {
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        if (!user.token) {
+          console.error("No token found, user may not be logged in.");
+          return;
+        }
+
+        const response = await axios.get("http://localhost:3000/api/recruiter", {
+          headers: {
+            Authorization: `Bearer ${user.token}`, // Send the token
+          },
+        });
+        console.log("Applications fetched:", response.data); // Log the response
+        this.applications = response.data;
+        console.log("Applications fetched:", this.applications);
+      } catch (error) {
+        console.error("Error fetching applications:", error);
+      }
+    },
     handleApplicantSelection(applicant) {
       this.selectedApplicant = applicant;
     },
@@ -81,6 +71,9 @@ export default {
       console.log("✅ User logged out, navigating to Login Page...");
       this.$router.push("/login"); // ✅ Redirect to login page
     }
+  },
+  created() {
+    this.getApplications(); // Fetch applications when the component is created
   },
 };
 </script>
