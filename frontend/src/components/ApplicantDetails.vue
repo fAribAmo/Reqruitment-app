@@ -4,16 +4,25 @@
     <p><strong>ID:</strong> {{ applicant.personId }}</p>
     <p><strong>Name:</strong> {{ applicant.fullName }}</p>
     <p><strong>Email:</strong> {{ applicant.email }}</p>
-    <p><strong>Resume:</strong> <a :href="applicant.resume" target="_blank">View Resume</a></p>
+    <p>
+      <strong>Resume:</strong>
+      <a :href="applicant.resume" target="_blank">View Resume</a>
+    </p>
     <p><strong>Date Applied:</strong> {{ applicant.dateApplied }}</p>
-    <p><strong>Status:</strong> <span :class="statusClass">{{ applicant.status }}</span></p>
-    <p><strong>Expertise:</strong> {{ applicant.competences && applicant.competences.length ? applicant.competences.join(", ") : 'No expertise data' }}</p>
+    <p>
+      <strong>Status:</strong>
+      <span :class="statusClass">{{ applicant.status }}</span>
+    </p>
+    <p>
+      <strong>Expertise:</strong>
+      {{ applicant.competences && applicant.competences.length ? applicant.competences.join(", ") : 'No expertise data' }}
+    </p>
     <p><strong>Availability:</strong></p>
-<ul>
-  <li v-for="(item, index) in applicant.availability" :key="index">
-    {{ item }}
-  </li>
-</ul>
+    <ul>
+      <li v-for="(item, index) in applicant.availability" :key="index">
+        {{ item }}
+      </li>
+    </ul>
 
     <!-- Status Update -->
     <div class="status-update">
@@ -34,9 +43,27 @@
 </template>
 
 <script>
+/**
+ * ApplicantDetails component displays detailed information about an applicant
+ * and provides functionality to update the application status.
+ *
+ * @component
+ */
 export default {
   name: "ApplicantDetails",
   props: {
+    /**
+     * The applicant object containing all relevant details.
+     * @type {Object}
+     * @property {string} personId - The unique identifier for the applicant.
+     * @property {string} fullName - The full name of the applicant.
+     * @property {string} email - The applicant's email address.
+     * @property {string} resume - URL linking to the applicant's resume.
+     * @property {string} dateApplied - The date the application was submitted.
+     * @property {string} status - The current status of the application.
+     * @property {Array} competences - An array of competences or expertise areas.
+     * @property {Array} availability - An array representing the applicant's availability.
+     */
     applicant: {
       type: Object,
       required: true,
@@ -44,10 +71,21 @@ export default {
   },
   data() {
     return {
+      /**
+       * The selected status for the applicant's application.
+       * Initially set to the current status from the applicant prop.
+       * @type {string}
+       */
       selectedStatus: this.applicant.status,
     };
   },
   computed: {
+    /**
+     * Computes the CSS classes for displaying the status with appropriate styling.
+     *
+     * @function statusClass
+     * @returns {Object} An object mapping CSS class names to boolean values.
+     */
     statusClass() {
       return {
         "status-unhandled": this.applicant.status === "Unhandled",
@@ -57,6 +95,12 @@ export default {
     },
   },
   methods: {
+    /**
+     * Emits an event to update the applicant's status.
+     *
+     * @function updateStatus
+     * @emits update-status - Emits the applicant's id and the newly selected status.
+     */
     updateStatus() {
       this.$emit("update-status", this.applicant.id, this.selectedStatus);
     },
@@ -96,7 +140,7 @@ export default {
   border-radius: 5px;
 }
 
-/* Status färger */
+/* Status colors */
 .status-unhandled {
   color: #ff9800;
   font-weight: bold;

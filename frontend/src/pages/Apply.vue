@@ -162,14 +162,19 @@ import axios from "axios";
 export default {
   data() {
     return {
-      // Dropdown options for areas of expertise
+      /**
+       * Dropdown options for areas of expertise.
+       */
       expertiseOptions: ["ticket sales", "lotteries", "roller coaster operation"],
 
-      // Store multiple expertise entries in an array
-      // We'll load them from localStorage in mounted()
+      /**
+       * Store multiple expertise entries in an array.
+       */
       expertiseEntries: [],
 
-      // Store multiple availability periods in an array
+      /**
+       * Store multiple availability periods in an array.
+       */
       availabilityPeriods: [],
 
       person_id: null,
@@ -180,7 +185,6 @@ export default {
     };
   },
   created() {
-    // You could also do this in mounted(), but created() is fine for localStorage
     const savedExpertise = localStorage.getItem("expertiseEntries");
     const savedAvailability = localStorage.getItem("availabilityPeriods");
     const savedUser = localStorage.getItem("user");
@@ -197,25 +201,30 @@ export default {
     if (savedExpertise) {
       this.expertiseEntries = JSON.parse(savedExpertise);
     } else {
-      // If there's nothing saved, initialize with one empty entry
+      // Initialize with one empty entry if there's nothing saved.
       this.expertiseEntries = [{ expertise: "", experience: "" }];
     }
 
     if (savedAvailability) {
       this.availabilityPeriods = JSON.parse(savedAvailability);
     } else {
-      // Initialize with one empty period if nothing saved
+      // Initialize with one empty period if nothing saved.
       this.availabilityPeriods = [{ fromDate: "", toDate: "" }];
     }
   },
   watch: {
-    // Watch each data array deeply so that localStorage is updated on any change
+    /**
+     * Watch expertiseEntries deeply and update localStorage on any change.
+     */
     expertiseEntries: {
       deep: true,
       handler(newVal) {
         localStorage.setItem("expertiseEntries", JSON.stringify(newVal));
       }
     },
+    /**
+     * Watch availabilityPeriods deeply and update localStorage on any change.
+     */
     availabilityPeriods: {
       deep: true,
       handler(newVal) {
@@ -224,36 +233,54 @@ export default {
     }
   },
   methods: {
-    // Add another expertise entry
+    /**
+     * Add another expertise entry.
+     */
     addExpertise() {
       this.expertiseEntries.push({ expertise: "", experience: "" });
     },
-    // Remove an expertise entry by index
+    /**
+     * Remove an expertise entry by index.
+     * @param {number} index - Index of the entry to remove.
+     */
     removeExpertise(index) {
       this.expertiseEntries.splice(index, 1);
     },
-    // Add another availability period
+    /**
+     * Add another availability period.
+     */
     addAvailability() {
       this.availabilityPeriods.push({ fromDate: "", toDate: "" });
     },
-    // Remove an availability period by index
+    /**
+     * Remove an availability period by index.
+     * @param {number} index - Index of the availability period to remove.
+     */
     removeAvailability(index) {
       this.availabilityPeriods.splice(index, 1);
     },
-    // Submit the form
+    /**
+     * Submit the job application form.
+     *
+     * Validates the form, shows a confirmation popup, and sends the application data to the server.
+     */
     submitApplication() {
-      //define user
+      // Define user from localStorage.
       const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-      // Clear any previous messages
+      // Clear any previous messages.
       this.message = "";
       this.errorMessage = "";
 
-      // Basic validation: at least one valid expertise with non-empty data
+      /**
+       * Check for at least one valid expertise entry with non-empty data.
+       */
       const hasValidExpertise = this.expertiseEntries.some(
         (item) => item.expertise && item.experience !== ""
       );
-      // And at least one non-empty availability period
+      /**
+       * Check for at least one non-empty availability period.
+       */
       const hasValidAvailability = this.availabilityPeriods.some(
         (period) => period !== ""
       );
@@ -267,54 +294,54 @@ export default {
         return;
       }
 
-      // If validation passes, show the confirmation popup
+      // If validation passes, show the confirmation popup.
       this.showConfirmation = true;
 
-// Prepare the payload for the server
-const applicationData = {
-  person_id: this.person_id,
-  expertiseEntries: this.expertiseEntries.map(entry => ({
-    expertise: entry.expertise,
-    years_of_experience: entry.experience
-  })),
-  availability: this.availabilityPeriods.map(period => ({
-    from_date: period.fromDate,
-    to_date: period.toDate
-  }))
-};
+      // Prepare the payload for the server.
+      const applicationData = {
+        person_id: this.person_id,
+        expertiseEntries: this.expertiseEntries.map(entry => ({
+          expertise: entry.expertise,
+          years_of_experience: entry.experience
+        })),
+        availability: this.availabilityPeriods.map(period => ({
+          from_date: period.fromDate,
+          to_date: period.toDate
+        }))
+      };
 
+      console.log("Submitting application with data:", JSON.stringify({
+        person_id: this.person_id,
+        expertiseEntries: this.expertiseEntries,
+        availability: this.availabilityPeriods
+      }, null, 2));
 
-  console.log("Submitting application with data:", JSON.stringify({
-  person_id: this.person_id,
-  expertiseEntries: this.expertiseEntries,
-  availability: this.availabilityPeriods
-}, null, 2));
+      console.log("Submitting application data that is:", applicationData);
+      console.log("User token in Apply", user.token);
+      
+      // Send the application data to the server using axios.
+      axios
+        .post("http://localhost:3000/api/apply", applicationData, {
+          headers: {
+            Authorization: `Bearer ${user.token}`, // Send the token.
+          },
+        })
+        .then((response) => {
+          // Handle success (customize this depending on your API response).
+          this.showConfirmation = false;
+          this.message = "Your application has been successfully submitted!";
 
-console.log("Submitting application data that is:", applicationData);
-console.log("User token in APply",user.token);
-  // Send the application data to the server using axios
-  axios
-    .post("http://localhost:3000/api/apply", applicationData, {
-      headers: {
-        Authorization: `Bearer ${user.token}`, // Send the token
-      },
-    })
-    .then((response) => {
-      // Handle success (you can customize this depending on your API response)
-      this.showConfirmation = false;
-      this.message = "Your application has been successfully submitted!";
-
-      // Clear localStorage
-      localStorage.removeItem("expertiseEntries");
-      localStorage.removeItem("availabilityPeriods");
-    })
-    .catch((error) => {
-      // Handle error
-      this.showConfirmation = false;
-      this.errorMessage = "There was an error submitting your application. Please try again.";
-      console.error("Error submitting application:", error);
-    });
-   },
+          // Clear localStorage.
+          localStorage.removeItem("expertiseEntries");
+          localStorage.removeItem("availabilityPeriods");
+        })
+        .catch((error) => {
+          // Handle error.
+          this.showConfirmation = false;
+          this.errorMessage = "There was an error submitting your application. Please try again.";
+          console.error("Error submitting application:", error);
+        });
+    },
   },
 };
 </script>

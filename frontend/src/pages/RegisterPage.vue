@@ -9,7 +9,13 @@
 </template>
 
 <script>
-import axios from "axios"; // Import Axios for API requests
+/**
+ * Import Axios for API requests.
+ */
+import axios from "axios";
+/**
+ * Import RegisterForm component.
+ */
 import RegisterForm from "../components/RegisterForm.vue";
 
 export default {
@@ -18,8 +24,19 @@ export default {
     RegisterForm,
   },
   methods: {
+    /**
+     * Handles user registration by sending the registration form data to the backend API.
+     * On successful registration, the user is redirected to the login page.
+     * In case of an error, an alert is shown indicating the username is already taken.
+     *
+     * @async
+     * @function handleUserRegistered
+     * @param {Object} formData - The registration data from the user.
+     * @returns {Promise<void>}
+     */
     async handleUserRegistered(formData) {
-      console.log("Received registration data:", formData); // Debugging
+      // Debug: Log the received registration data.
+      console.log("Received registration data:", formData);
 
       try {
         const response = await axios.post(
@@ -27,9 +44,10 @@ export default {
           formData
         );
 
-        console.log(" Registration Successful:", response.data);
+        // Debug: Log the successful registration response.
+        console.log("Registration Successful:", response.data);
 
-        //  Redirect user to login page after successful registration
+        // Redirect user to login page after successful registration.
         this.$router.push("/login");
       } catch (error) {
         console.error(

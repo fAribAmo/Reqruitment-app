@@ -31,21 +31,42 @@
 </template>
 
 <script>
+/**
+ * LoginForm component handles the login form user interface and emits the user credentials
+ * upon submission.
+ *
+ * @component
+ */
 export default {
   name: "LoginForm",
   data() {
     return {
+      /**
+       * The username entered by the user.
+       * @type {string}
+       */
       username: "",
+      /**
+       * The password entered by the user.
+       * @type {string}
+       */
       password: "",
     };
   },
   methods: {
+    /**
+     * Handles the form submission for login.
+     * Gathers the username and password from the input fields and emits the
+     * "login-submitted" event with the credentials.
+     *
+     * @function submitLogin
+     */
     submitLogin() {
       const credentials = {
         username: this.username,
         password: this.password,
       };
-      this.$emit("login-submitted", credentials); // Emit form data to LoginPage.vue
+      this.$emit("login-submitted", credentials);
     },
   },
 };

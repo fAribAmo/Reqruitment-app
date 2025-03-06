@@ -1,4 +1,3 @@
-
 <template>
   <div class="interaction-table">
     <h2>All Applications</h2>
@@ -29,19 +28,39 @@
 </template>
 
 <script>
+/**
+ * InteractionTable component displays a table of applications.
+ * When a row is clicked, it emits an event with the selected applicant.
+ *
+ * @component
+ */
 export default {
   name: "InteractionTable",
   props: {
+    /**
+     * Array of application objects to display.
+     * @type {Array}
+     */
     applications: {
       type: Array,
       default: () => [],
     },
+    /**
+     * The ID of the currently selected applicant.
+     * @type {number|null}
+     */
     selectedApplicantId: { 
       type: Number,
       default: null,
     },
   },
   methods: {
+    /**
+     * Emits the 'applicant-selected' event with the given applicant.
+     *
+     * @function selectApplicant
+     * @param {Object} applicant - The applicant object that was selected.
+     */
     selectApplicant(applicant) {
       this.$emit("applicant-selected", applicant);
     },

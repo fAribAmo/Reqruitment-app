@@ -73,20 +73,61 @@
 </template>
 
 <script>
+/**
+ * RegisterForm component handles the user registration form.
+ * It collects user data and emits an event with the form data upon submission.
+ *
+ * @component
+ */
 export default {
   name: "RegisterForm",
   data() {
     return {
+      /**
+       * The user's first name.
+       * @type {string}
+       */
       name: "",
+      /**
+       * The user's surname.
+       * @type {string}
+       */
       surname: "",
+      /**
+       * The user's personal ID number.
+       * @type {string}
+       */
       pnr: "",
+      /**
+       * The user's email address.
+       * @type {string}
+       */
       email: "",
+      /**
+       * The username for the account.
+       * @type {string}
+       */
       username: "",
+      /**
+       * The password for the account.
+       * @type {string}
+       */
       password: "",
+      /**
+       * The role identifier for the user.
+       * Defaults to "2" which indicates applicant.
+       * @type {string}
+       */
       role_id: "2", // Default to applicant
     };
   },
   methods: {
+    /**
+     * Handles the registration form submission.
+     * Constructs the formData object and emits a "user-registered" event with the collected data.
+     *
+     * @function submitRegistration
+     */
     submitRegistration() {
       const formData = {
         name: this.name,
@@ -98,7 +139,7 @@ export default {
         role_id: this.role_id,
       };
 
-      this.$emit("user-registered", formData); // Emit form data to RegisterPage.vue
+      this.$emit("user-registered", formData);
     },
   },
 };
