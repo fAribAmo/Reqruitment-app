@@ -78,5 +78,6 @@ sequelize.sync().then(() => console.log('Database connected successfully')).catc
  * @event listen
  * @param {number} PORT - The port on which the server listens.
  */
-app.listen(PORT, () => console.log(`Server running on ${renderURL}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
 
