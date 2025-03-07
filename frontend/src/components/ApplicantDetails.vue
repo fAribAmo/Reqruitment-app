@@ -9,11 +9,11 @@
     <p><strong>Status:</strong> <span :class="statusClass">{{ applicant.status }}</span></p>
     <p><strong>Expertise:</strong> {{ applicant.competences && applicant.competences.length ? applicant.competences.join(", ") : 'No expertise data' }}</p>
     <p><strong>Availability:</strong></p>
-<ul>
-  <li v-for="(item, index) in applicant.availability" :key="index">
-    {{ item }}
-  </li>
-</ul>
+    <ul>
+      <li v-for="(item, index) in applicant.availability" :key="index">
+        {{ item }}
+      </li>
+    </ul>
 
     <!-- Status Update -->
     <div class="status-update">
@@ -37,6 +37,18 @@
 export default {
   name: "ApplicantDetails",
   props: {
+    /**
+     * The applicant object containing details about the job application.
+     * @type {Object}
+     * @property {number} personId - The unique ID of the applicant.
+     * @property {string} fullName - The full name of the applicant.
+     * @property {string} email - The applicant's email address.
+     * @property {string} resume - URL to the applicant's resume.
+     * @property {string} dateApplied - The date when the application was submitted.
+     * @property {string} status - The current status of the application.
+     * @property {string[]} competences - List of applicant's skills and expertise.
+     * @property {string[]} availability - List of available dates/times for the applicant.
+     */
     applicant: {
       type: Object,
       required: true,
@@ -44,10 +56,18 @@ export default {
   },
   data() {
     return {
+      /**
+       * The selected status for the application.
+       * @type {string}
+       */
       selectedStatus: this.applicant.status,
     };
   },
   computed: {
+    /**
+     * Computes the CSS class based on the application's status.
+     * @returns {Object} The CSS class object for styling.
+     */
     statusClass() {
       return {
         "status-unhandled": this.applicant.status === "Unhandled",
@@ -57,6 +77,11 @@ export default {
     },
   },
   methods: {
+    /**
+     * Emits an event to update the application's status.
+     * @fires update-status
+     * @returns {void}
+     */
     updateStatus() {
       this.$emit("update-status", this.applicant.id, this.selectedStatus);
     },

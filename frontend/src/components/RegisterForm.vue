@@ -1,3 +1,4 @@
+
 <template>
   <form @submit.prevent="submitRegistration" class="register-form">
     <h2 class="form-title">Create Account</h2>
@@ -79,16 +80,48 @@ export default {
   name: "RegisterForm",
   data() {
     return {
+      /**
+       * @property {string} name - User's first name.
+       */
       name: "",
+      
+      /**
+       * @property {string} surname - User's last name.
+       */
       surname: "",
+      
+      /**
+       * @property {string} pnr - User's personal ID number (10 digits).
+       */
       pnr: "",
+      
+      /**
+       * @property {string} email - User's email address.
+       */
       email: "",
+      
+      /**
+       * @property {string} username - Chosen username for the account.
+       */
       username: "",
+      
+      /**
+       * @property {string} password - User's account password.
+       */
       password: "",
-      role_id: "2", // Default to applicant
+      
+      /**
+       * @property {string} role_id - User role, default is "2" (applicant).
+       */
+      role_id: "2", 
     };
   },
   methods: {
+    /**
+     * @method submitRegistration
+     * @description Collects form data and emits an event to notify the parent component.
+     * @emits user-registered - Sends the collected form data as an object.
+     */
     submitRegistration() {
       const formData = {
         name: this.name,
@@ -99,7 +132,7 @@ export default {
         password: this.password,
         role_id: this.role_id,
       };
-
+      
       this.$emit("user-registered", formData); // Emit form data to RegisterPage.vue
     },
   },

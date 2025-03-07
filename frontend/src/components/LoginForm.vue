@@ -31,15 +31,34 @@
 </template>
 
 <script>
+/**
+ * LoginForm component
+ * 
+ * This component provides a simple login form where users can enter their username and password.
+ * Upon submission, it emits a "login-submitted" event with the entered credentials.
+ */
 export default {
   name: "LoginForm",
   data() {
     return {
+      /**
+       * Username input field.
+       * @type {string}
+       */
       username: "",
+
+      /**
+       * Password input field.
+       * @type {string}
+       */
       password: "",
     };
   },
   methods: {
+    /**
+     * Handles form submission and emits login credentials.
+     * @emits login-submitted
+     */
     submitLogin() {
       const credentials = {
         username: this.username,
