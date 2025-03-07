@@ -9,6 +9,7 @@ import { createApp } from 'vue'
 //import './style.css'
 import App from './App.vue'
 import router from './router'; 
+import Header from './components/header.vue';
 
 /**
  * Initializes the Vue.js application.
@@ -16,6 +17,8 @@ import router from './router';
  * @constant {Object} app - The Vue application instance.
  */
 const app = createApp(App);
+
+app.component("commonHeader", Header);
 
 /**
  * Attaches Vue Router to the application.
