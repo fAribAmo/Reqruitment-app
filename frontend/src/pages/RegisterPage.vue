@@ -22,10 +22,7 @@ export default {
       console.log("Received registration data:", formData); // Debugging
 
       try {
-        const response = await axios.post(
-          "http://localhost:3000/api/auth/register",
-          formData
-        );
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, formData);
 
         console.log(" Registration Successful:", response.data);
 

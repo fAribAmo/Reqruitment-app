@@ -20,7 +20,8 @@ const PORT = process.env.PORT || 3000;
  * 
  * @middleware
  */
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: process.env.CORS_ORIGIN, credentials: true }));
+
 
 /**
  * Middleware to parse incoming JSON requests.
@@ -77,4 +78,5 @@ sequelize.sync().then(() => console.log('Database connected successfully')).catc
  * @event listen
  * @param {number} PORT - The port on which the server listens.
  */
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server running on ${renderURL}`));
+

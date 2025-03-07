@@ -6,7 +6,7 @@ import axios from 'axios';
  * @constant {AxiosInstance} api
  */
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api', // Connect to backend
+  baseURL: import.meta.env.VITE_API_BASE_URL + '/api', 
   headers: { 'Content-Type': 'application/json' },
   withCredentials: true // Ensure cookies/JWTs work properly
 });

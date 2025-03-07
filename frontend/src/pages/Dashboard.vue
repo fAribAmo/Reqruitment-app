@@ -53,7 +53,7 @@ export default {
     // Fetches applications from the backend API
     async fetchApplications() {
       try {
-        const response = await axios.get('/api/applications'); // Adjust API endpoint as needed
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/applications`); // Adjust API endpoint as needed
         this.applications = response.data;
       } catch (error) {
         console.error('Error fetching applications:', error);
