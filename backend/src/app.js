@@ -20,7 +20,25 @@ const PORT = process.env.PORT || 3000;
  * 
  * @middleware
  */
-app.use(cors({ origin: process.env.CORS_ORIGIN, credentials: true }));
+const allowedOrigins = [
+    "https://reqruitment-frontend.onrender.com", 
+    "http://localhost:5173" 
+  ];
+  
+  app.use(
+    cors({
+      origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
+      credentials: true,
+      methods: "GET,POST,PUT,DELETE,OPTIONS",
+      allowedHeaders: "Content-Type,Authorization"
+    })
+  );
 
 
 /**
