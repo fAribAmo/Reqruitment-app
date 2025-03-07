@@ -30,8 +30,10 @@
         id="pnr"
         v-model="pnr"
         type="text"
-        placeholder="e.g. 123456-7890"
+        placeholder="e.g. 1234567890"
         required
+        minlength="10"
+        maxlength="10"
       />
     </div>
 
