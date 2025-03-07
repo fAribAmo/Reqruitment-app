@@ -321,9 +321,9 @@ export default {
       
       // Send the application data to the server using axios.
       axios
-        .post("http://localhost:3000/api/apply", applicationData, {
+        .post(import.meta.env.VITE_API_BASE_URL + "/api/apply", applicationData, {
           headers: {
-            Authorization: `Bearer ${user.token}`, // Send the token.
+            Authorization: `Bearer ${user.token}`, // Send the token
           },
         })
         .then((response) => {
