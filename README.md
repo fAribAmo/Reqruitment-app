@@ -36,8 +36,9 @@ cd recruitment-app
    npm install
    ```
 2. Copy `.env.example` to `.env` and update the necessary values. 
+ ```
 cp .env.example .env 
-
+ ```
 3. Start the frontend application:
    ```
    npm run dev
@@ -51,9 +52,9 @@ cp .env.example .env
    npm install
 
 2. Copy `.env.example` to `.env` and update the necessary values.
-
+```
 cp .env.example .env 
-
+```
 3. Run the backend server:
    ```
    npx nodemon src/app.js
