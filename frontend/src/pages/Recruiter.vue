@@ -61,7 +61,7 @@ export default {
           return;
         }
 
-        const response = await axios.get("http://localhost:3000/api/recruiter", {
+        const response = await axios.get(import.meta.env.VITE_API_BASE_URL + "/api/recruiter", {
           headers: {
             Authorization: `Bearer ${user.token}`, // Send the token for authentication.
           },

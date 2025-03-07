@@ -41,7 +41,7 @@ export default {
       console.log("Sending login request with credentials:", credentials); //Debug request
 
       try {
-        const response = await axios.post("http://localhost:3000/api/auth/login", credentials);
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, credentials);
 
         console.log("Full Backend Response:", response.data); //Debug response
 
