@@ -20,7 +20,27 @@ const PORT = process.env.PORT || 3000;
  * 
  * @middleware
  */
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+const allowedOrigins = [
+    "https://reqruitment-frontend.onrender.com", 
+    "http://localhost:5173" 
+  ];
+  
+  app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    }
+    
+    if (req.method === "OPTIONS") {
+      return res.sendStatus(200); // Respond to preflight requests
+    }
+  
+    next();
+  });
+
 
 /**
  * Middleware to parse incoming JSON requests.
@@ -77,4 +97,6 @@ sequelize.sync().then(() => console.log('Database connected successfully')).catc
  * @event listen
  * @param {number} PORT - The port on which the server listens.
  */
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+

@@ -342,6 +342,7 @@ export default {
           console.error("Error submitting application:", error);
         });
     },
+
   },
 };
 </script>
