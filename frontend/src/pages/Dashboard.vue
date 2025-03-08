@@ -45,12 +45,24 @@
 export default {
   data() {
     return {
-      userType: '', // Retrieved from authentication
-      applications: [] // Applications data fetched from the backend
+      /**
+        * Retrieved from authentication.
+        * @type {string}
+        */
+        userType: '',
+       /**
+        * Applications data fetched from the backend.
+        * @type {Array}
+        */
+       applications: []
     };
   },
   methods: {
-    // Fetches applications from the backend API
+    /**
+      * Fetches applications from the backend API.
+      * @async
+      * @returns {Promise<void>}
+      */
     async fetchApplications() {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/applications`); // Adjust API endpoint as needed
@@ -60,6 +72,9 @@ export default {
       }
     },
 
+    /**
+     * Logs out the user by removing stored user data and redirecting to the login page.
+     */
     logout() {
     localStorage.removeItem("user"); //  Remove stored user data
     console.log(" User logged out, redirecting to Login Page...");

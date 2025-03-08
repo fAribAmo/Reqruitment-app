@@ -37,6 +37,10 @@ export default {
     };
   },
   methods: {
+    /**
+     * Fetches the list of applications from the server.
+     * @async
+     */
     async getApplications() { 
       try {
         const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -57,15 +61,27 @@ export default {
         console.error("Error fetching applications:", error);
       }
     },
+    /**
+     * Handles the selection of an applicant.
+     * @param {Object} applicant - The selected applicant.
+     */
     handleApplicantSelection(applicant) {
       this.selectedApplicant = applicant;
     },
+    /**
+     * Updates the status of an applicant.
+     * @param {number} id - The ID of the applicant.
+     * @param {string} newStatus - The new status of the applicant.
+     */
     updateApplicantStatus(id, newStatus) {
       const applicant = this.applications.find(app => app.id === id);
       if (applicant) {
         applicant.status = newStatus;
       }
     },
+    /**
+     * Logs out the user and redirects to the login page.
+     */
     logout() {
       localStorage.removeItem("user"); // ✅ Remove user data
       console.log("✅ User logged out, navigating to Login Page...");
