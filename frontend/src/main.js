@@ -9,7 +9,7 @@ import { createApp } from 'vue'
 //import './style.css'
 import App from './App.vue'
 import router from './router'; 
-import header from './components/header.vue';
+// import header from './components/header.vue';
 
 /**
  * Initializes the Vue.js application.
@@ -18,7 +18,7 @@ import header from './components/header.vue';
  */
 const app = createApp(App);
 
-app.component("commonHeader", header);
+// app.component("commonHeader", header);
 /**
  * Attaches Vue Router to the application.
  */

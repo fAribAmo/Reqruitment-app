@@ -1,7 +1,7 @@
 <script setup>
 </script>
 <template>
-  <commonHeader />
+  <!-- <commonHeader /> -->
   <router-view />
 </template>
 
