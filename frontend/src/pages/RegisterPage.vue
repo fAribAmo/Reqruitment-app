@@ -18,15 +18,20 @@ export default {
     RegisterForm,
   },
   methods: {
+    /**
+     * Handles the user registration process.
+     * 
+     * @param {Object} formData - The registration data submitted by the user.
+     */
     async handleUserRegistered(formData) {
       console.log("Received registration data:", formData); // Debugging
 
       try {
         const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, formData);
 
-        console.log(" Registration Successful:", response.data);
+        console.log("Registration Successful:", response.data);
 
-        //  Redirect user to login page after successful registration
+        // Redirect user to login page after successful registration
         this.$router.push("/login");
       } catch (error) {
         console.error(

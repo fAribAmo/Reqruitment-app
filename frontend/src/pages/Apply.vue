@@ -224,23 +224,35 @@ export default {
     }
   },
   methods: {
-    // Add another expertise entry
+    /**
+     * Add another expertise entry.
+     */
     addExpertise() {
       this.expertiseEntries.push({ expertise: "", experience: "" });
     },
-    // Remove an expertise entry by index
+    /**
+     * Remove an expertise entry by index.
+     * @param {number} index - The index of the expertise entry to remove.
+     */
     removeExpertise(index) {
       this.expertiseEntries.splice(index, 1);
     },
-    // Add another availability period
+    /**
+     * Add another availability period.
+     */
     addAvailability() {
       this.availabilityPeriods.push({ fromDate: "", toDate: "" });
     },
-    // Remove an availability period by index
+    /**
+     * Remove an availability period by index.
+     * @param {number} index - The index of the availability period to remove.
+     */
     removeAvailability(index) {
       this.availabilityPeriods.splice(index, 1);
     },
-    // Submit the form
+    /**
+     * Submit the form.
+     */
     submitApplication() {
       //define user
       const user = JSON.parse(localStorage.getItem("user") || "{}");
