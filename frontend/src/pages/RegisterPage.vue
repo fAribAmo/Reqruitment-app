@@ -30,7 +30,7 @@ export default {
         this.$router.push("/login");
       } catch (error) {
         console.error(
-          "❌ Registration Failed:",
+          " Registration Failed:",
           error.response?.data?.message || "Server error"
         );
         alert("The username is already taken.");
