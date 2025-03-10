@@ -6,7 +6,6 @@ const { createUser, findUserByUsername } = require('../integration/authIntegrati
 const { generateJWT } = require('../middlewares/authMiddleware');
 const { withTransaction } = require('../integration/transactionManager.js');
 
-
 /**
  * Registers a new user.
  * 
@@ -19,11 +18,13 @@ const { withTransaction } = require('../integration/transactionManager.js');
 async function register(req, res) {
     const { name, surname, pnr, email, username, password, role_id } = req.body;
     try {
-        await withTransaction(async (t) => {
-            const existingUser = await findUserByUsername(username, t);
+        await withTransaction(async () => {
+            
+            const existingUser = await findUserByUsername(username);
             if (existingUser) throw new Error('Username already taken');
 
-            await createUser({ name, surname, pnr, email, username, password, role_id }, t);
+            await createUser({ name, surname, pnr, email, username, password, role_id });
+           
         });
 
         res.status(201).json({ message: 'User registered successfully' });
@@ -61,8 +62,8 @@ async function login(req, res) {
         let user; // Store user data outside the transaction
         let token; // Store token to use after transaction
 
-        await withTransaction(async (t) => {
-            user = await findUserByUsername(username, t);
+        await withTransaction(async () => {
+            user = await findUserByUsername(username);
             if (!user) throw new Error("User not found");
 
             console.log("User found:", user.username);
@@ -104,37 +105,4 @@ async function login(req, res) {
 }
 
 
-/**
- * Sets a new password for a user who do not have one
- * @async
- * @function setPassword
- * @param {Object} req - Express request object.
- * @param {Object} req.body - Request body containing credentials.
- * @param {string} req.body.username - User's username.
- * @param {string} req.body.newPassword - New password to set.
- * @param {Object} res - Express response object.
- * @returns {Promise<void>} Responds with JSON: `{ token: string, message: string }`.
- * @throws {Error} 404 - If user is not found.
- * @throws {Error} 500 - If a server error occurs.
- */
-async function setPassword(req, res) {
-    const { username, newPassword } = req.body;
-    try {
-        let token;
-        await withTransaction(async (t) => {
-        const user = await findUserByUsername(username, t);
-        if (!user) throw new Error("User not found");
-        
-        user.password = await hashPassword(newPassword);
-        await user.save({ transaction: t });
-
-       token = generateJWT(user);
-    });    
-        res.json({ token, message: 'Password set successfully, you are now logged in' });
-
-    } catch (error) {
-        res.status(500).json({ message: 'Server error' });
-    }
-}
-
-module.exports = { register, login, setPassword };
+module.exports = { register, login };

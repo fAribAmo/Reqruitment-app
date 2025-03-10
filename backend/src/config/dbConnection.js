@@ -1,8 +1,12 @@
 /**
- * DB connection using Sequlize ORM 
+ * DB connection using Sequelize ORM with CLS for transaction management.
  * */
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
+const cls = require("cls-hooked");
+
+const namespace = cls.createNamespace("transaction-namespace");
+Sequelize.useCLS(namespace);
 
 const sequelize = process.env.DATABASE_URL
     ? new Sequelize(process.env.DATABASE_URL, {
@@ -35,5 +39,8 @@ sequelize.authenticate()
     .then(() => console.log('Database connection successful'))
     .catch(err => console.error('DB Connection Error:', err));
 
+
 module.exports = sequelize;
+module.exports.namespace = namespace;
+
 

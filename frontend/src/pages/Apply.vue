@@ -267,9 +267,8 @@ export default {
       );
       // And at least one non-empty availability period
       const hasValidAvailability = this.availabilityPeriods.some(
-        (period) => period !== ""
+        (period) => period.fromDate !== "" && period.toDate !== ""
       );
-
       if (!hasValidExpertise) {
         this.errorMessage = "Please enter at least one valid area of expertise and years of experience!";
         return;

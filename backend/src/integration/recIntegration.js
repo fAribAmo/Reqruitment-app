@@ -9,22 +9,19 @@ const { Person, CompetenceProfile, Competence, Availability } = require('../mode
  * @returns {Array} Formatted list of applicants with details about their competences and availability
  * @throws {Error} If there is an error while fetching data from the database
  */
-const getApplicantsData = async (transaction) => {
+const getApplicantsData = async () => {
   try {
     const applicants = await Person.findAll({
       include: [
         {
           model: CompetenceProfile,
-          include: [{ model: Competence, attributes: ['name'] }],
-          transaction
+          include: [{ model: Competence, attributes: ['name'] }]
         },
         {
           model: Availability,
           attributes: ['from_date', 'to_date'], 
-          transaction
         },
       ],
-      transaction
     });
 
     // formatting the data

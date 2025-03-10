@@ -6,14 +6,15 @@ const sequelize = require('../config/dbConnection');
  * @returns {Promise<any>} The result of the transaction.
  */
 async function withTransaction(transactionCallback) {
-    return await sequelize.transaction(async (t) => {
+    return await sequelize.transaction(async () => {  // ingen (t) eftersom CLS hanterar det
         try {
-            return await transactionCallback(t);
+            return await transactionCallback();
         } catch (error) {
             console.error("Transaction failed:", error.message);
-            throw error;  // Ensures rollback happens automatically
+            throw error; // Rollback sker automatiskt
         }
     });
 }
+
 
 module.exports = { withTransaction };

@@ -7,6 +7,8 @@
 
 const { createApplication } = require('../integration/appliIntegration');
 const { withTransaction } = require('../integration/transactionManager.js');
+
+
 /**
  * Handles the submission of a job application by the applicant.
  * 
@@ -30,8 +32,8 @@ const submitApplication = async (req, res) => {
             return res.status(400).json({ message: "Missing required fields" });
         }
 
-        await withTransaction(async (t) => {
-            await createApplication(person_id, expertiseEntries, availability, t);
+        await withTransaction(async () => {
+            await createApplication(person_id, expertiseEntries, availability); 
         });
 
         res.status(201).json({ message: "Application submitted successfully" });

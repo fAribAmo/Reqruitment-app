@@ -4,7 +4,6 @@
 const {getApplicantsData} = require("../integration/recIntegration"); // Import integration layer
 const { withTransaction } = require('../integration/transactionManager.js');
 
-
 /**
  * @function getApplicationData
  * @description Retrieves all applications from the database and returns them to the client.
@@ -14,8 +13,8 @@ const { withTransaction } = require('../integration/transactionManager.js');
  */
 const getApplicationData = async (req, res) => {
     try {
-        const applications = await withTransaction(async (t) => {
-            return await getApplicantsData(t);
+        const applications = await withTransaction(async () => {
+            return await getApplicantsData(); 
         });
 
         res.status(200).json(applications);
