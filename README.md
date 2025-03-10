@@ -55,10 +55,10 @@ cp .env.example .env
 ```
 cp .env.example .env 
 ```
-3. Run the backend server:
-   ```
-   npx nodemon src/app.js
-   ```
+3. Start the backend server:
+```
+npm start
+```
 
 ## 4. Setting Up the Database  
 This project uses an **existing PostgreSQL database file**. Follow these steps to set up the database:  
