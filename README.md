@@ -84,3 +84,5 @@ npm test
 ## Deployment
 - The project is deployed on **Render**.
 - The **CI/CD pipeline** ensures automatic deployment after successful testing.
+
+Access the deployed application here: [Recruitment App](https://reqruitment-frontend.onrender.com/)
