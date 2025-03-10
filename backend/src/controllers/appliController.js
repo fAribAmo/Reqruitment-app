@@ -6,7 +6,7 @@
  */
 
 const { createApplication } = require('../integration/appliIntegration');
-
+const { withTransaction } = require('../integration/transactionManager.js');
 /**
  * Handles the submission of a job application by the applicant.
  * 
@@ -17,25 +17,32 @@ const { createApplication } = require('../integration/appliIntegration');
  * @param {Object} req - The request object containing the application data.
  * @param {Object} res - The response object used to send back the result to the client.
  * 
- * @throws {Error} If any of the required fields are missing, a 400 error is returned.
- * @throws {Error} If any error occurs during the application creation process, a 500 error is returned.
+ * @returns {Promise<void>} Responds with `{ message: string }`
  */
 const submitApplication = async (req, res) => {
     try {
-        console.log("Received application data:", req.body); 
+        console.log("Received application data:", req.body);
         console.log("Headers:", req.headers);
+
         const { person_id, expertiseEntries, availability } = req.body;
 
         if (!person_id || !expertiseEntries || !availability) {
             return res.status(400).json({ message: "Missing required fields" });
         }
 
-        await createApplication(person_id, expertiseEntries, availability);
+        await withTransaction(async (t) => {
+            await createApplication(person_id, expertiseEntries, availability, t);
+        });
 
-        return res.status(201).json({ message: "Application submitted successfully" });
+        res.status(201).json({ message: "Application submitted successfully" });
     } catch (error) {
-        console.error("Error applying for job:", error);
-        return res.status(500).json({ message: "Internal server error" });
+        console.error("Error applying for job:", error.message);
+
+        if (error.message.startsWith("Invalid expertise")) {
+            return res.status(400).json({ message: error.message });
+        }
+
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 

@@ -1,7 +1,4 @@
-const bcrypt = require('bcryptjs');
 const { Person } = require('../models');
-
-
 
 /**
  * Retrieves a user from the database by their username.
@@ -12,8 +9,11 @@ const { Person } = require('../models');
  * @returns {Promise<Object|null>} The user object if found, otherwise `null`.
  */
 
-async function findUserByUsername(username) {
-    return await Person.findOne({ where: { username } });
+async function findUserByUsername(username, transaction) {
+    return await Person.findOne({
+        where: { username },
+        transaction: transaction, 
+    });
 }
 
 /**
@@ -23,8 +23,8 @@ async function findUserByUsername(username) {
  * @param {Object} userData - The user data to save in the database.
  * @returns {Promise<Object>} The newly created user.
  */
-async function createUser(userData) {
-    return await Person.create(userData); 
+async function createUser(userData, transaction) {
+    return await Person.create(userData, transaction); 
 }
 
 

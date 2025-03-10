@@ -5,27 +5,26 @@ const { Person, CompetenceProfile, Competence, Availability } = require('../mode
 /**
  * @function getApplicantsData
  * @description Retrieves applicants' data, including their competence profiles and availability, from the database.
+ * @param {Object} transaction - Sequelize transaction object.
  * @returns {Array} Formatted list of applicants with details about their competences and availability
  * @throws {Error} If there is an error while fetching data from the database
  */
-const getApplicantsData = async () => {
+const getApplicantsData = async (transaction) => {
   try {
     const applicants = await Person.findAll({
       include: [
         {
           model: CompetenceProfile,
-          include: [
-            {
-              model: Competence,
-              attributes: ['name'], 
-            },
-          ],
+          include: [{ model: Competence, attributes: ['name'] }],
+          transaction
         },
         {
           model: Availability,
           attributes: ['from_date', 'to_date'], 
+          transaction
         },
       ],
+      transaction
     });
 
     // formatting the data

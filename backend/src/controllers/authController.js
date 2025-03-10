@@ -4,7 +4,8 @@
  */
 const { createUser, findUserByUsername } = require('../integration/authIntegration');
 const { generateJWT } = require('../middlewares/authMiddleware');
-const { Person } = require('../models');
+const { withTransaction } = require('../integration/transactionManager.js');
+
 
 /**
  * Registers a new user.
@@ -18,22 +19,22 @@ const { Person } = require('../models');
 async function register(req, res) {
     const { name, surname, pnr, email, username, password, role_id } = req.body;
     try {
-        const existingUser = await findUserByUsername(username);
-        if (existingUser) return res.status(400).json({ message: 'Username already taken' });
+        await withTransaction(async (t) => {
+            const existingUser = await findUserByUsername(username, t);
+            if (existingUser) throw new Error('Username already taken');
 
-        /*
-        console.log("Hashing password before storing...");
-        const hashedPassword = await hashPassword(password);  //Ensure password is hashed
-        console.log("Hashed Password:", hashedPassword);
-        */
-
-        await createUser({ name, surname, pnr, email, username, password, role_id });
+            await createUser({ name, surname, pnr, email, username, password, role_id }, t);
+        });
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
+        if (error.message === 'Username already taken') {
+            return res.status(400).json({ message: error.message });
+        }
         res.status(500).json({ message: 'Server error' });
-    } 
+    }
 }
+
 
 /**
  * Logs in a user by verifying credentials and returning a JWT token and person_id
@@ -53,49 +54,55 @@ async function register(req, res) {
  */
 async function login(req, res) {
     const { username, password } = req.body;
+
     try {
         console.log("Login attempt for:", username);
 
-        const user = await findUserByUsername(username);
-     
-        if (!user) {
-            console.log("User not found:", username);
-            return res.status(404).json({ message: "User not found" });
-        }
+        let user; // Store user data outside the transaction
+        let token; // Store token to use after transaction
 
-        console.log("User found:", user.username);
-        console.log("Stored password in DB:", user.password);
-        console.log("Entered password:", password);
+        await withTransaction(async (t) => {
+            user = await findUserByUsername(username, t);
+            if (!user) throw new Error("User not found");
 
-        if (!user.password) {
-            console.log("No password set for user:", username);
-            return res.status(400).json({ message: 'Some fields are missing. Please create a password.' });
-        }
+            console.log("User found:", user.username);
+            console.log("Stored password in DB:", user.password);
+            console.log("Entered password:", password);
 
-        //Compare password in plain text
-        if (password !== user.password) {
-            console.log("Passwords do not match for:", username);
-            return res.status(401).json({ message: "Invalid credentials" });
-        }
+            if (!user.password) throw new Error("Some fields are missing. Please create a password.");
+            if (password !== user.password) throw new Error("Invalid credentials");
 
-        console.log("Generating JWT token...");
+            console.log("Generating JWT token...");
+            token = generateJWT(user);
+        });
 
-        const token = generateJWT(user);
-        
         console.log("Login successful!");
 
-        //Send both token, person_id and role in response
-        res.json({ 
-            token, 
-            role: user.role_id,  //Include role_id in response
+        // Send response AFTER transaction completes
+        res.json({
+            token,
+            role: user.role_id, // Include role_id in response
             person_id: user.person_id,
-            message: 'Login successful'
+            message: "Login successful",
         });
 
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
-    }
+        console.log("Transaction failed:", error.message);
+    
+        let status = 500; // Default to server error
+    
+        if (error.message === "User not found") {
+            status = 404;
+        } else if (error.message.includes("fields are missing")) {
+            status = 400;
+        } else if (error.message === "Invalid credentials") {
+            status = 401;
+        }
+    
+        res.status(status).json({ message: error.message });
+    }    
 }
+
 
 /**
  * Sets a new password for a user who do not have one
@@ -113,14 +120,18 @@ async function login(req, res) {
 async function setPassword(req, res) {
     const { username, newPassword } = req.body;
     try {
-        const user = await findUserByUsername(username);
-        if (!user) return res.status(404).json({ message: 'User not found' });
-
+        let token;
+        await withTransaction(async (t) => {
+        const user = await findUserByUsername(username, t);
+        if (!user) throw new Error("User not found");
+        
         user.password = await hashPassword(newPassword);
-        await user.save();
+        await user.save({ transaction: t });
 
-        const token = generateJWT(user);
+       token = generateJWT(user);
+    });    
         res.json({ token, message: 'Password set successfully, you are now logged in' });
+
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
     }
