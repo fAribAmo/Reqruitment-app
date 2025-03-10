@@ -27,27 +27,27 @@ Run the following command to clone the project:
 ```
 git clone <repository-url>
 cd recruitment-app
- ```
+```
 
 ### 2. Frontend Setup
 1. Navigate to the frontend folder and install dependencies:
-   ```
+```
    cd frontend
    npm install
-   ```
+```
 2. Copy `.env.example` to `.env` and update the necessary values. 
- ```
+```
 cp .env.example .env 
- ```
+```
 3. Start the frontend application:
-   ```
+```
    npm run dev
-   ```
+```
 
 
 ### 3. Backend Setup
 1. Navigate to the backend folder and install dependencies:
-   ```
+```
    cd backend
    npm install
 
