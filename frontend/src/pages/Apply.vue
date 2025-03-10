@@ -265,7 +265,7 @@ export default {
       const hasValidExpertise = this.expertiseEntries.some(
         (item) => item.expertise && item.experience !== ""
       );
-      // And at least one non-empty availability period
+      // And at least one non-empty availability period. Checks if fromDate & toDate are empty.
       const hasValidAvailability = this.availabilityPeriods.some(
         (period) => period.fromDate !== "" && period.toDate !== ""
       );
