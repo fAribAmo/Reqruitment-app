@@ -75,13 +75,16 @@ async function login(req, res) {
                 if (!user) throw new Error("User not found");
             } catch (error) {
                 console.error("Database query failed:", error.message);
-                throw new Error("User not found"); // Ensures error is logged & rethrown
+                throw new Error("User not found"); 
             }
 
             console.log("User found:", user.username);
 
             if (!user.password) throw new Error("Some fields are missing. Please create a password.");
-            if (password !== user.password) throw new Error("Invalid credentials");
+            if (password !== user.password) {
+                console.error("Invalid credentials for user:", user.username);
+                throw new Error("Invalid credentials");
+            }
 
             console.log("Generating JWT token...");
             token = generateJWT(user);
