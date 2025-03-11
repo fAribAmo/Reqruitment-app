@@ -23,7 +23,13 @@ async function register(req, res) {
             const existingUser = await findUserByUsername(username);
             if (existingUser) throw new Error('Username already taken');
 
-            await createUser({ name, surname, pnr, email, username, password, role_id });
+            try {
+                await createUser({ name, surname, pnr, email, username, password, role_id });
+                console.log("User created successfully!");
+            } catch (error) {
+                console.error("Failed to create user:", error.message);
+                throw new Error("Database error occurred while creating user");
+            }
            
         });
 
@@ -35,6 +41,7 @@ async function register(req, res) {
         res.status(500).json({ message: 'Server error' });
     }
 }
+
 
 
 /**
@@ -63,12 +70,15 @@ async function login(req, res) {
         let token; // Store token to use after transaction
 
         await withTransaction(async () => {
-            user = await findUserByUsername(username);
-            if (!user) throw new Error("User not found");
+            try {
+                user = await findUserByUsername(username);
+                if (!user) throw new Error("User not found");
+            } catch (error) {
+                console.error("Database query failed:", error.message);
+                throw new Error("Database error occurred"); // Ensures error is logged & rethrown
+            }
 
             console.log("User found:", user.username);
-            console.log("Stored password in DB:", user.password);
-            console.log("Entered password:", password);
 
             if (!user.password) throw new Error("Some fields are missing. Please create a password.");
             if (password !== user.password) throw new Error("Invalid credentials");
@@ -88,7 +98,7 @@ async function login(req, res) {
         });
 
     } catch (error) {
-        console.log("Transaction failed:", error.message);
+        console.error("Stack Trace:", error.stack);
     
         let status = 500; // Default to server error
     

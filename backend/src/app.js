@@ -18,7 +18,10 @@ const PORT = process.env.PORT || 3000;
 /**
  * Enables CORS to allow communication between frontend and backend.
  * 
- * @middleware
+ * @function corsMiddleware
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
  */
 const allowedOrigins = [
     "https://reqruitment-frontend.onrender.com", 

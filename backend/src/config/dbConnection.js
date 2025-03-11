@@ -1,6 +1,14 @@
 /**
- * DB connection using Sequelize ORM with CLS for transaction management.
- * */
+ * @fileoverview Database connection setup using Sequelize ORM with CLS for transaction management.
+ * Supports PostgreSQL and can connect using either a DATABASE_URL (for cloud-based deployment) 
+ * or environment variables (for local development).
+ * 
+ * - Uses `cls-hooked` to enable automatic transaction management.
+ * - Supports SSL for secure cloud-based PostgreSQL connections.
+ * - Logs connection status and errors for debugging.
+ * 
+ * @module database
+ */
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 const cls = require("cls-hooked");
@@ -34,7 +42,13 @@ const sequelize = process.env.DATABASE_URL
 // Debugging: Check if DATABASE_URL is being used
 console.log('Using DATABASE_URL:', !!process.env.DATABASE_URL);
 
-// Ensure database connection
+/**
+ * Authenticates the database connection.
+ * Logs a success message if successful, otherwise logs an error.
+ * 
+ * @function sequelize.authenticate
+ * @returns {Promise<void>} Resolves if connection is successful, rejects with an error otherwise.
+ */
 sequelize.authenticate()
     .then(() => console.log('Database connection successful'))
     .catch(err => console.error('DB Connection Error:', err));
