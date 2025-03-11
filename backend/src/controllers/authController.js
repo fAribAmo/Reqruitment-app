@@ -35,10 +35,9 @@ async function register(req, res) {
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
-        if (error.message === 'Username already taken') {
-            return res.status(400).json({ message: error.message });
-        }
-        res.status(500).json({ message: 'Server error' });
+        console.error("Registration failed:", error.message);
+        console.error("Stack Trace:", error.stack);
+        res.status(500).json({ message: "Server error" });
     }
 }
 
