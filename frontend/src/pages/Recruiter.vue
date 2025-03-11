@@ -83,9 +83,9 @@ export default {
      * Logs out the user and redirects to the login page.
      */
     logout() {
-      localStorage.removeItem("user"); // ✅ Remove user data
-      console.log("✅ User logged out, navigating to Login Page...");
-      this.$router.push("/login"); // ✅ Redirect to login page
+      localStorage.removeItem("user"); // Remove user data
+      console.log("User logged out, navigating to Login Page...");
+      this.$router.push("/login"); // Redirect to login page
     }
   },
   created() {
