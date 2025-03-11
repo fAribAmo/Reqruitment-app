@@ -75,7 +75,7 @@ async function login(req, res) {
                 if (!user) throw new Error("User not found");
             } catch (error) {
                 console.error("Database query failed:", error.message);
-                throw new Error("Database error occurred"); // Ensures error is logged & rethrown
+                throw new Error("User not found"); // Ensures error is logged & rethrown
             }
 
             console.log("User found:", user.username);
