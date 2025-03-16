@@ -58,19 +58,6 @@ export default {
     };
   },
   methods: {
-    /**
-      * Fetches applications from the backend API.
-      * @async
-      * @returns {Promise<void>}
-      */
-    async fetchApplications() {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/applications`); // Adjust API endpoint as needed
-        this.applications = response.data;
-      } catch (error) {
-        console.error('Error fetching applications:', error);
-      }
-    },
 
     /**
      * Logs out the user by removing stored user data and redirecting to the login page.
@@ -86,8 +73,6 @@ export default {
     // Simulating fetching userType from authentication (should be replaced with actual authentication logic)
     this.userType = localStorage.getItem('userType') || 'applicant'; 
 
-    // Fetch applications from the backend
-    this.fetchApplications();
   }
   
 };
